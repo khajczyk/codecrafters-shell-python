@@ -7,7 +7,10 @@ def main():
         user_input = input("")
         if user_input == "exit":
             break
-        sys.stdout.write(f"{user_input}: command not found\n")
+        elif user_input.startswith("echo"):
+            sys.stdout.write(user_input.split("echo ")[1] + "\n")
+        else:
+            sys.stdout.write(f"{user_input}: command not found\n")
     pass
 
 
