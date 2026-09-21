@@ -6,8 +6,8 @@ def main():
         sys.stdout.write("$ ")
         user_input = input("")
         commands = ["exit", "echo", "type"]
-        argument = user_input.split(" ", 1)[1]
-
+        if " " in user_input:
+            argument = user_input.split(" ", 1)[1]
         if user_input == "exit":
             break
         elif user_input.startswith("echo"):
