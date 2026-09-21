@@ -7,12 +7,13 @@ def main():
         user_input = input("")
         commands = ["exit", "echo", "type"]
         argument = user_input.split(" ", 1)[1]
+
         if user_input == "exit":
             break
         elif user_input.startswith("echo"):
             sys.stdout.write(f"{argument}\n")
         elif user_input.startswith("type"):
-            if commands.index(argument):
+            if argument in commands:
                 sys.stdout.write(f"{argument} is a shell builtin\n")
             else:
                 sys.stdout.write(f"{argument}: not found\n")
