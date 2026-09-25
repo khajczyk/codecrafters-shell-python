@@ -30,7 +30,6 @@ def main():
         elif user_input.startswith("cd "):
             try:
                 os.chdir(argument)
-                print(os.path.abspath(os.getcwd()))
             except:
                 print(f"cd: {argument}: No such file or directory")
         else:
