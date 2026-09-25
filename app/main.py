@@ -26,7 +26,7 @@ def main():
         elif shutil.which(split[0]):
             subprocess.call(split)
         elif user_input == "pwd":
-            print(os.path.abspath())
+            print(os.path.abspath(os.getcwd()))
         else:
             sys.stdout.write(f"{user_input}: command not found\n")
     pass
