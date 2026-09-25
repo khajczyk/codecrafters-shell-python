@@ -24,8 +24,8 @@ def main():
                 else:
                     sys.stdout.write(f"{argument}: not found\n")
         elif shutil.which(split[0]):
-            print(echo_quote_parser(user_input))
-            subprocess.call(echo_quote_parser(user_input))
+            isCat = split[0] == "cat"
+            subprocess.call(echo_quote_parser(user_input, isCat))
         elif user_input == "pwd":
             print(os.path.abspath(os.getcwd()))
         elif user_input.startswith("cd "):
@@ -40,12 +40,13 @@ def main():
             sys.stdout.write(f"{user_input}: command not found\n")
     pass
 
-def echo_quote_parser(arg : str):
+def echo_quote_parser(arg : str, isCat : bool = False):
     closing = True
     parsed = ""
     for char in arg:
         if char == "'":
             closing = not closing
+            if isCat: parsed += char
         elif closing == True and len(parsed) > 1 and char == " " and parsed[-1] == " ":
             pass
         else:
