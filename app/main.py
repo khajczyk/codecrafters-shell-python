@@ -11,8 +11,6 @@ def main():
         split = user_input.split(" ")
         if len(split) > 1:
             argument = " ".join(split[1:])
-
-        
         if user_input == "exit":
             break
         elif user_input.startswith("echo"):
@@ -26,7 +24,7 @@ def main():
                 else:
                     sys.stdout.write(f"{argument}: not found\n")
         elif shutil.which(split[0]):
-            subprocess.call(split)
+            subprocess.call(echo_quote_parser(user_input))
         elif user_input == "pwd":
             print(os.path.abspath(os.getcwd()))
         elif user_input.startswith("cd "):
