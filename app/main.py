@@ -48,7 +48,7 @@ def echo_quote_parser(arg : str):
     pass_one = False
     for char in arg:
         if pass_one:
-            pass_one += char
+            parsed += char
             pass_one = False
         elif char == '\\':
             hasContent = True
