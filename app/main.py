@@ -50,7 +50,7 @@ def echo_quote_parser(arg : str):
             opened = not opened
             hasContent == True
         elif opened:
-            parsed += opened
+            parsed += char
         elif char == " ":
             if parsed or hasContent:
                 result.append(parsed)
