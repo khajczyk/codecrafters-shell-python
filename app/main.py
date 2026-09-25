@@ -74,8 +74,8 @@ def echo_quote_parser(arg : str):
             else:
                 parsed += char
                 hasContent == True
-        if parsed or hasContent:
-            result.append(parsed)
+            if parsed or hasContent:
+                result.append(parsed)
     return result
 
 
