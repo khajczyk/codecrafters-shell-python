@@ -8,25 +8,38 @@ def main():
         sys.stdout.write("$ ")
         user_input = input("")
         commands = ["exit", "echo", "type", "pwd", "cd"]
+        output = ""
+
+        if " > " in user_input:
+            redir_split = user_input.split(" > ")
+            redir_file = redir_split[1]
+            user_input = redir_split[0]
+        elif " 1> " in user_input:
+            redir_split = user_input.split(" 1> ")
+            redir_file = redir_split[1]
+            user_input = redir_split[0]
+        
         split = user_input.split(" ")
         if len(split) > 1:
             argument = " ".join(split[1:])
+        
+
         if user_input == "exit":
             break
         elif split[0] == "echo":
-            print(f"{" ".join(echo_quote_parser(argument))}")
+            output = f"{" ".join(echo_quote_parser(argument))}"
         elif split[0] == "type":
             if argument in commands:
-                sys.stdout.write(f"{argument} is a shell builtin\n")
+                output = f"{argument} is a shell builtin\n"
             else:
                 if path := shutil.which(argument):
-                    sys.stdout.write(f"{argument} is {path}\n")
+                    output = f"{argument} is {path}\n"
                 else:
-                    sys.stdout.write(f"{argument}: not found\n")
+                    output = f"{argument}: not found\n"
         elif shutil.which(echo_quote_parser(user_input)[0]):
             subprocess.call(echo_quote_parser(user_input))
         elif user_input == "pwd":
-            print(os.path.abspath(os.getcwd()))
+            output = os.path.abspath(os.getcwd())
         elif split[0] == "cd":
             try:
                 if not argument or argument[0] == "~":
@@ -34,9 +47,15 @@ def main():
                 else:
                     os.chdir(argument)
             except:
-                print(f"cd: {argument}: No such file or directory")
+                output = f"cd: {argument}: No such file or directory"
         else:
             sys.stdout.write(f"{user_input}: command not found\n")
+        if redir_file:
+            with open(redir_file, "w") as file:
+                file.write(output)
+        else:
+            print(output)
+
     pass
 
 def echo_quote_parser(arg : str):
