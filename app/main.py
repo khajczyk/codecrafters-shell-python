@@ -16,8 +16,7 @@ def main():
         if user_input == "exit":
             break
         elif user_input.startswith("echo"):
-            quote_split = argument.split("'")
-            print(f"{"".join(quote_split)}")
+            print(f"{echo_quote_parser(argument)}")
         elif user_input.startswith("type"):
             if argument in commands:
                 sys.stdout.write(f"{argument} is a shell builtin\n")
@@ -41,6 +40,18 @@ def main():
         else:
             sys.stdout.write(f"{user_input}: command not found\n")
     pass
+
+def echo_quote_parser(arg : str):
+    closing = True
+    parsed = ""
+    for char in arg:
+        if char == "'":
+            closing = not closing
+        elif closing == True and len(parsed) > 1 and char == " " and parsed[-1] == " ":
+            pass
+        else:
+            parsed += char
+    return parsed
 
 
 if __name__ == "__main__":
