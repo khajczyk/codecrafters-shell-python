@@ -11,10 +11,13 @@ def main():
         split = user_input.split(" ")
         if len(split) > 1:
             argument = " ".join(split[1:])
+
+        
         if user_input == "exit":
             break
         elif user_input.startswith("echo"):
-            sys.stdout.write(f"{argument}\n")
+            quote_split = argument.split("'")
+            print(f"{"".join(quote_split)}")
         elif user_input.startswith("type"):
             if argument in commands:
                 sys.stdout.write(f"{argument} is a shell builtin\n")
