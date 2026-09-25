@@ -30,7 +30,7 @@ def main():
         elif user_input.startswith("cd "):
             try:
                 if not argument or argument[0] == "~":
-                    os.chdir("HOME")
+                    os.chdir(os.getenv("HOME"))
                 else:
                     os.chdir(argument)
             except:
