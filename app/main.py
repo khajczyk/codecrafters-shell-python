@@ -1,5 +1,5 @@
 import sys
-
+import os
 
 def main():
     while True:
@@ -16,7 +16,11 @@ def main():
             if argument in commands:
                 sys.stdout.write(f"{argument} is a shell builtin\n")
             else:
-                sys.stdout.write(f"{argument}: not found\n")
+                base_path = os.path.split(argument)
+                if os.path.isdir(base_path[0]) and os.access(argument, os.X_OK):
+                    sys.stdout.write(f"{base_path[1]} is {argument}")
+                else:
+                    sys.stdout.write(f"{argument}: not found\n")
         else:
             sys.stdout.write(f"{user_input}: command not found\n")
     pass
