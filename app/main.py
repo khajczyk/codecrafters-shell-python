@@ -56,7 +56,7 @@ def echo_quote_parser(arg : str):
                 parsed += char
             else:
                 pass_one = True
-        elif char == '"':
+        elif char == '"' and not opened:
             double_opened = not double_opened
             hasContent = True
         elif char == "'" and not double_opened:
