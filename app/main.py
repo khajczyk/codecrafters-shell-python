@@ -1,5 +1,5 @@
 import sys
-import os
+import shutil
 
 def main():
     while True:
@@ -16,12 +16,8 @@ def main():
             if argument in commands:
                 sys.stdout.write(f"{argument} is a shell builtin\n")
             else:
-                #iterate and extract paths
-                paths = sys.path
-                print(sys.path)
-                #check if path is dir and access to combination
-                if os.path.isdir(paths) and os.access(argument, os.X_OK):
-                    sys.stdout.write("test")
+                if path := shutil.which(argument):
+                    sys.stdout.write(f"{argument} is {path}")
                 else:
                     sys.stdout.write(f"{argument}: not found\n")
         else:
