@@ -8,7 +8,7 @@ def main():
         sys.stdout.write("$ ")
         user_input = input("")
         commands = ["exit", "echo", "type", "pwd", "cd"]
-
+        output = ""
         if " > " in user_input:
             redir_split = user_input.split(" > ")
             redir_file = redir_split[1]
@@ -53,7 +53,7 @@ def main():
                 output = f"cd: {argument}: No such file or directory"
         else:
             sys.stdout.write(f"{user_input}: command not found\n")
-        if redir_file and output:
+        if redir_file and output != "":
             print("im here" + output)
             with open(redir_file, "w") as file:
                 file.write(output)
