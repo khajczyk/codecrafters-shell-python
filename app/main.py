@@ -7,7 +7,7 @@ def main():
     while True:
         sys.stdout.write("$ ")
         user_input = input("")
-        commands = ["exit", "echo", "type", "pwd"]
+        commands = ["exit", "echo", "type", "pwd", "cd"]
         split = user_input.split(" ")
         if len(split) > 1:
             argument = " ".join(split[1:])
@@ -27,6 +27,11 @@ def main():
             subprocess.call(split)
         elif user_input == "pwd":
             print(os.path.abspath(os.getcwd()))
+        elif user_input.startswith("cd "):
+            try:
+                print(os.chdir(argument))
+            except:
+                print(f"cd: {argument}: No such file or directory")
         else:
             sys.stdout.write(f"{user_input}: command not found\n")
     pass
