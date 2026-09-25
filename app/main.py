@@ -16,10 +16,12 @@ def main():
             if argument in commands:
                 sys.stdout.write(f"{argument} is a shell builtin\n")
             else:
-                base_path = os.path.split(argument)
-                sys.stdout.write(base_path[0] + argument)
-                if os.path.isdir(base_path[0]) and os.access(argument, os.X_OK):
-                    sys.stdout.write(f"{base_path[1]} is {argument}")
+                #iterate and extract paths
+                paths = os.path.abspath
+                sys.stdout.write(paths + "\n")
+                #check if path is dir and access to combination
+                if os.path.isdir(paths) and os.access(argument, os.X_OK):
+                    sys.stdout.write("test")
                 else:
                     sys.stdout.write(f"{argument}: not found\n")
         else:
