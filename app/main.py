@@ -39,11 +39,9 @@ def main():
                     output = f"{argument}: not found\n"
         elif shutil.which(echo_quote_parser(user_input)[0]):
             if redir_file:
-                print("HERE")
                 file = open(redir_file, "w")
                 subprocess.call(echo_quote_parser(user_input), stdout=echo_quote_parser(redir_file))
             else:
-                print("wong")
                 subprocess.call(echo_quote_parser(user_input))
         elif user_input == "pwd":
             output = os.path.abspath(os.getcwd())
