@@ -9,7 +9,7 @@ def main():
         commands = ["exit", "echo", "type"]
         if " " in user_input:
             split = user_input.split(" ")
-            argument = split[-1]
+            argument = split[1:]
         if user_input == "exit":
             break
         elif user_input.startswith("echo"):
@@ -22,7 +22,7 @@ def main():
                     sys.stdout.write(f"{argument} is {path}\n")
                 else:
                     sys.stdout.write(f"{argument}: not found\n")
-        elif command := shutil.which(user_input.split(" ", 1)[0]):
+        elif command := shutil.which(user_input.split(" ")[0]):
             subprocess.call(split)
         else:
             sys.stdout.write(f"{user_input}: command not found\n")
