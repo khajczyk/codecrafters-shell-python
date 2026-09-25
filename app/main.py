@@ -54,7 +54,7 @@ def main():
                 output = f"cd: {argument}: No such file or directory"
         else:
             sys.stdout.write(f"{user_input}: command not found\n")
-        if redir_file and output:
+        if redir_file and output != "":
             with open(redir_file, "w") as file:
                 file.write(output)
         else:
