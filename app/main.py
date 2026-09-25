@@ -45,8 +45,15 @@ def echo_quote_parser(arg : str):
     hasContent = False
     result = []
     double_opened = False
+    pass_one = False
     for char in arg:
-        if char == '"':
+        if pass_one:
+            pass_one += char
+            pass_one = False
+        elif char == '\\':
+            hasContent = True
+            pass_one = True
+        elif char == '"':
             double_opened = not double_opened
             hasContent = True
         elif char == "'" and not double_opened:
@@ -62,8 +69,6 @@ def echo_quote_parser(arg : str):
         else:
             parsed += char
             hasContent == True
-        
-    
     if parsed or hasContent:
         result.append(parsed)
     return result
