@@ -25,7 +25,6 @@ def main():
                     sys.stdout.write(f"{argument}: not found\n")
         elif shutil.which(split[0]):
             isCat = split[0] == "cat"
-            print(echo_quote_parser(user_input, isCat))
             subprocess.call(echo_quote_parser(user_input, isCat))
         elif user_input == "pwd":
             print(os.path.abspath(os.getcwd()))
