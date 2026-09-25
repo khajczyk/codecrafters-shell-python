@@ -51,10 +51,11 @@ def echo_quote_parser(arg : str):
             parsed += char
             pass_one = False
         elif char == "\\":
-            pass_one = True
             hasContent = True
             if opened:
                 parsed += char
+            else:
+                pass_one = True
         elif char == '"':
             double_opened = not double_opened
             hasContent = True
@@ -70,7 +71,7 @@ def echo_quote_parser(arg : str):
                 parsed = ""
         else:
             parsed += char
-            hasContent == True
+            hasContent = True
     if parsed or hasContent:
         result.append(parsed)
     return result
