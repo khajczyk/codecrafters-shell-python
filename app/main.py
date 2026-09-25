@@ -17,7 +17,7 @@ def main():
                 sys.stdout.write(f"{argument} is a shell builtin\n")
             else:
                 if path := shutil.which(argument):
-                    sys.stdout.write(f"{argument} is {path}")
+                    sys.stdout.write(f"{argument} is {path}\n")
                 else:
                     sys.stdout.write(f"{argument}: not found\n")
         else:
