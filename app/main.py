@@ -14,7 +14,7 @@ def main():
         if user_input == "exit":
             break
         elif split[0] == "echo":
-            print(f"{echo_quote_parser(argument)}")
+            print(f"{" ".join(echo_quote_parser(argument))}")
         elif split[0] == "type":
             if argument in commands:
                 sys.stdout.write(f"{argument} is a shell builtin\n")
