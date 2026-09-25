@@ -1,4 +1,5 @@
 import sys
+import os
 import shutil
 import subprocess
 
@@ -6,9 +7,9 @@ def main():
     while True:
         sys.stdout.write("$ ")
         user_input = input("")
-        commands = ["exit", "echo", "type"]
-        if " " in user_input:
-            split = user_input.split(" ")
+        commands = ["exit", "echo", "type", "pwd"]
+        split = user_input.split(" ")
+        if len(split) > 1:
             argument = " ".join(split[1:])
         if user_input == "exit":
             break
@@ -22,8 +23,10 @@ def main():
                     sys.stdout.write(f"{argument} is {path}\n")
                 else:
                     sys.stdout.write(f"{argument}: not found\n")
-        elif command := shutil.which(user_input.split(" ")[0]):
+        elif shutil.which(split[0]):
             subprocess.call(split)
+        elif user_input == "pwd":
+            print(os.path.abspath())
         else:
             sys.stdout.write(f"{user_input}: command not found\n")
     pass
