@@ -13,9 +13,9 @@ def main():
             argument = " ".join(split[1:])
         if user_input == "exit":
             break
-        elif user_input.startswith("echo"):
+        elif split[0] == "echo":
             print(f"{echo_quote_parser(argument)}")
-        elif user_input.startswith("type"):
+        elif split[0] == "type":
             if argument in commands:
                 sys.stdout.write(f"{argument} is a shell builtin\n")
             else:
@@ -28,7 +28,7 @@ def main():
             subprocess.call(echo_quote_parser(user_input, isCat))
         elif user_input == "pwd":
             print(os.path.abspath(os.getcwd()))
-        elif user_input.startswith("cd "):
+        elif split[0] == "cd":
             try:
                 if not argument or argument[0] == "~":
                     os.chdir(os.getenv("HOME"))
@@ -40,18 +40,28 @@ def main():
             sys.stdout.write(f"{user_input}: command not found\n")
     pass
 
-def echo_quote_parser(arg : str, isCat : bool = False):
-    closing = True
+def echo_quote_parser(arg : str):
+    opened = False
     parsed = ""
+    hasContent = False
+    result = []
     for char in arg:
         if char == "'":
-            closing = not closing
-            if isCat: parsed += char
-        elif closing == True and len(parsed) > 1 and char == " " and parsed[-1] == " ":
-            pass
+            opened = not opened
+            hasContent == True
+        elif opened:
+            parsed += opened
+        elif char == " ":
+            if parsed or hasContent:
+                result.append(parsed)
+                hasContent = False
+                parsed = ""
         else:
             parsed += char
-    return parsed
+            hasContent == True
+    if parsed or hasContent:
+        result.append(parsed)
+    return result
 
 
 if __name__ == "__main__":
