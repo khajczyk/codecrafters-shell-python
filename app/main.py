@@ -23,7 +23,7 @@ def main():
                     sys.stdout.write(f"{argument} is {path}\n")
                 else:
                     sys.stdout.write(f"{argument}: not found\n")
-        elif shutil.which(split[0]):
+        elif shutil.which(echo_quote_parser(user_input)[0]):
             subprocess.call(echo_quote_parser(user_input))
         elif user_input == "pwd":
             print(os.path.abspath(os.getcwd()))
