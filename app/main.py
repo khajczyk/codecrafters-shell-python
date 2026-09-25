@@ -38,8 +38,8 @@ def main():
                     output = f"{argument}: not found\n"
         elif shutil.which(echo_quote_parser(user_input)[0]):
             if redir_file:
-                with open(redir_file, "w") as file:
-                    subprocess.call(echo_quote_parser(user_input), stdout=file)
+                file = open(redir_file, "w")
+                subprocess.call(echo_quote_parser(user_input), stdout=file)
             else:
                 subprocess.call(echo_quote_parser(user_input))
         elif user_input == "pwd":
