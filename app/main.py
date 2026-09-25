@@ -50,12 +50,11 @@ def echo_quote_parser(arg : str):
         if pass_one:
             parsed += char
             pass_one = False
-        elif char == '\\':
+        elif char == "\\":
             pass_one = True
+            hasContent = True
             if opened:
                 parsed += char
-            else:
-                hasContent = True
         elif char == '"':
             double_opened = not double_opened
             hasContent = True
