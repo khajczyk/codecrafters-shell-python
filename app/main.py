@@ -18,7 +18,7 @@ def main():
             else:
                 #iterate and extract paths
                 paths = sys.path
-                sys.stdout.write(paths + "\n")
+                sys.stdout.write(paths)
                 #check if path is dir and access to combination
                 if os.path.isdir(paths) and os.access(argument, os.X_OK):
                     sys.stdout.write("test")
