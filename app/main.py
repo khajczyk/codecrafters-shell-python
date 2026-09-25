@@ -17,7 +17,7 @@ def main():
                 sys.stdout.write(f"{argument} is a shell builtin\n")
             else:
                 #iterate and extract paths
-                paths = os.path.abspath
+                paths = os.path.abspath()
                 sys.stdout.write(paths + "\n")
                 #check if path is dir and access to combination
                 if os.path.isdir(paths) and os.access(argument, os.X_OK):
