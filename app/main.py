@@ -17,7 +17,7 @@ def main():
                 sys.stdout.write(f"{argument} is a shell builtin\n")
             else:
                 base_path = os.path.split(argument)
-                sys.stdout.write(base_path)
+                sys.stdout.write(base_path[0])
                 if os.path.isdir(base_path[0]) and os.access(argument, os.X_OK):
                     sys.stdout.write(f"{base_path[1]} is {argument}")
                 else:
