@@ -9,7 +9,7 @@ def main():
         commands = ["exit", "echo", "type"]
         if " " in user_input:
             split = user_input.split(" ")
-            argument = split[1:]
+            argument = " ".join(split[1:])
         if user_input == "exit":
             break
         elif user_input.startswith("echo"):
