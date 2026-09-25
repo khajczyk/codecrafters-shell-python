@@ -9,6 +9,8 @@ def main():
         user_input = input("")
         commands = ["exit", "echo", "type", "pwd", "cd"]
         output = ""
+        redir_file = None
+
         if " > " in user_input:
             redir_split = user_input.split(" > ")
             redir_file = redir_split[1]
@@ -36,11 +38,10 @@ def main():
                 else:
                     output = f"{argument}: not found\n"
         elif shutil.which(echo_quote_parser(user_input)[0]):
-            
             if redir_file:
                 print("HERE")
                 file = open(redir_file, "w")
-                subprocess.call(echo_quote_parser(user_input), stdout=file)
+                subprocess.call(echo_quote_parser(user_input), stdout=echo_quote_parser(redir_file))
             else:
                 print("wong")
                 subprocess.call(echo_quote_parser(user_input))
@@ -54,14 +55,15 @@ def main():
                     os.chdir(argument)
             except:
                 output = f"cd: {argument}: No such file or directory"
+        elif output != "":
+            if redir_file:
+                with open(redir_file, "w") as file:
+                    file.write(output)
+            else:
+                print(output)
         else:
             sys.stdout.write(f"{user_input}: command not found\n")
-        if redir_file and output != "":
-            print("im here" + output)
-            with open(redir_file, "w") as file:
-                file.write(output)
-        else:
-            print(output)
+        
     pass
 
 def echo_quote_parser(arg : str):
