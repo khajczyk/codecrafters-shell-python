@@ -3,11 +3,16 @@ import sys
 import os
 import shutil
 import subprocess
+import rlcompleter
+import readline
 
 BUILTINS = ["exit", "echo", "type", "pwd", "cd"]
 DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 
 def main():
+    readline.set_completer(complete)
+    readline.parse_and_bind("tab: complete")
+
     while True:
         user_input = input("$ ")
         command_text, redirect_target, stream, append = redirect(user_input)
@@ -113,6 +118,15 @@ def parser(arg : str):
         result.append(current_arg)
     return result
 
+def complete(text, state):
+    matches = sorted(
+        command for command in BUILTINS
+        if command.startswith(text)
+    )
+
+    if state < len(matches):
+        return matches[state] + " "
+    return None
 
 if __name__ == "__main__":
     main()
