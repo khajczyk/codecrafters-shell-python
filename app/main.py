@@ -126,10 +126,11 @@ def complete(text, state):
     dirs = os.environ["PATH"].split(":")
     for dir in dirs:
         if os.path.exists(dir) and dir.startswith(text):
+            print(dir)
             matches.append(dir)
 
     if state < len(matches):
-        print(matches[state])
+        print("HELLO")
         return matches[state] + " "
     return None
 
