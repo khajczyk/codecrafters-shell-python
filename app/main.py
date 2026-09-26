@@ -55,7 +55,10 @@ def main():
                     os.chdir(argument)
             except:
                 output = f"cd: {argument}: No such file or directory"
-        elif output != "":
+        else:
+            print(f"{user_input}: command not found\n")
+
+        if output != "":
             if redir_file:
                 file_dir = echo_quote_parser(redir_file)[0]
                 os.makedirs("/".join(file_dir.split("/")[:-1]), exist_ok=True)
@@ -63,8 +66,6 @@ def main():
                     file.write(output)
             else:
                 print(output)
-        else:
-            sys.stdout.write(f"{user_input}: command not found\n")
     pass
 
 def echo_quote_parser(arg : str):
