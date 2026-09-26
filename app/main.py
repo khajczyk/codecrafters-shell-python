@@ -20,6 +20,9 @@ def main():
 
         if redirect_target is not None:
             filename = parser(redirect_target)[0]
+            directory = os.path.dirname(filename)
+            if directory:
+                os.makedirs(directory, exist_ok=True)
             destination = open(filename, "w")
         else:
             destination = contextlib.nullcontext(sys.stdout)
@@ -50,10 +53,7 @@ def main():
                     print(f"cd: {target}: No such file or directory", file=stdout)
 
             elif shutil.which(command):
-                try:
-                    subprocess.call(tokens, stdout=stdout)
-                except:
-                    print("PANIC")
+                subprocess.call(tokens, stdout=stdout)
             else:
                 print(f"{command}: command not found", file=stdout)
     pass
