@@ -129,8 +129,7 @@ def complete(text, state):
     for dir in dirs:
         print("Ive entered")
         if os.path.exists(dir) and dir.startswith(text):
-            print(dir)
-            matches.append(dir)
+            matches.append(os.listdir(dir))
 
     if state < len(matches):
         print("HELLO")
