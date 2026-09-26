@@ -10,7 +10,6 @@ DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 
 def main():
     readline.set_completer(complete)
-    readline.set_completer_delims(" \t")
     readline.parse_and_bind("tab: complete")
     while True:
         user_input = input("$ ")
@@ -122,13 +121,12 @@ def complete(text, state):
         command for command in BUILTINS
         if command.startswith(text)
     )
-    print("HERE")
 
     dirs = os.environ["PATH"].split(":")
     print(dirs)
     for dir in dirs:
-        print("Ive entered")
         if os.path.exists(dir) and dir.startswith(text):
+            print(os.listdir(dir))
             matches.append(os.listdir(dir))
 
     if state < len(matches):
