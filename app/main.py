@@ -122,7 +122,7 @@ def complete(text, state):
         command for command in BUILTINS
         if command.startswith(text)
     ) + sorted(
-        command for command in sys.path
+        command for command in os.get_exec_path
         if command.startswith(text)
     )
 
