@@ -67,7 +67,9 @@ def redirect(input : str):
         (" >> ", "stdout", True),
         (" 1> ", "stdout", False),
         (" 1>> ", "stdout", True),
-        (" 2> ", "stderr", False)]:
+        (" 2> ", "stderr", False),
+        (" 2>> ", "stderr", True),
+        ]:
         command, separator, filename = input.partition(operator)
         if separator:
             return command, filename, stream, append
