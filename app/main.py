@@ -75,9 +75,11 @@ def parser(arg : str):
     quote = None
     for char in arg:
         if escape:
+            if quote == '"' and char not in DOUBLE_QUOTE_ESCAPES:
+                current_arg += "\\"
             current_arg += char
             escape = False
-        elif char in DOUBLE_QUOTE_ESCAPES:
+        elif char == "\\":
             argument_started = True
             if quote == "'":
                 current_arg += char
