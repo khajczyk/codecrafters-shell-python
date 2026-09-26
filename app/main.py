@@ -40,7 +40,7 @@ def main():
         elif shutil.which(echo_quote_parser(user_input)[0]):
             if redir_file:
                 file_dir = echo_quote_parser(redir_file)[0]
-                os.makedirs(file_dir.split("/")[:-1], exist_ok=True)
+                os.makedirs("/".join(file_dir.split("/")[:-1]), exist_ok=True)
                 with open(file_dir, "w") as file:
                     subprocess.call(echo_quote_parser(user_input), stdout=file)
             else:
@@ -58,7 +58,7 @@ def main():
         elif output != "":
             if redir_file:
                 file_dir = echo_quote_parser(redir_file)[0]
-                os.makedirs(file_dir.split("/")[:-1], exist_ok=True)
+                os.makedirs("/".join(file_dir.split("/")[:-1]), exist_ok=True)
                 with open(file_dir, "w") as file:
                     file.write(output)
             else:
