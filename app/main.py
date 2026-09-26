@@ -10,7 +10,7 @@ DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 def main():
     while True:
         user_input = input("$ ")
-        command_text, redirect_target = redirect(user_input)
+        command_text, redirect_target, stream = redirect(user_input)
         tokens = parser(command_text)
 
         if not tokens:
@@ -27,7 +27,10 @@ def main():
         else:
             destination = contextlib.nullcontext(sys.stdout)
         
-        with destination as stdout:
+        with destination as file:
+            stdout = file if stream == "stdout" else sys.stdout
+            stderr = file if stream == "stderr" else sys.stderr
+
             if command == "exit":
                 break
             elif command == "echo":
@@ -40,7 +43,7 @@ def main():
                 elif path := shutil.which(target):
                     print(f"{target} is {path}", file=stdout)
                 else:
-                    print(f"{target}: not found", file=stdout)
+                    print(f"{target}: not found", file=stderr)
 
             elif command == "pwd":
                 print(os.getcwd(), file=stdout)
@@ -50,20 +53,19 @@ def main():
                     target = os.path.expanduser(args[0]) if args else os.path.expanduser("~")
                     os.chdir(target)
                 except:
-                    print(f"cd: {target}: No such file or directory", file=stdout)
+                    print(f"cd: {target}: No such file or directory", file=stderr)
 
             elif shutil.which(command):
-                subprocess.call(tokens, stdout=stdout, stderr=stdout)
+                subprocess.call(tokens, stdout=stdout, stderr=stderr)
             else:
-                print(f"{command}: command not found", file=stdout)
-    pass
-
+                print(f"{command}: command not found", file=stderr)
+    
 def redirect(input : str):
-    for operator in [" > ", " 1> ", " 2> "]:
+    for operator, stream in [(" > ", "stdout"), (" 1> ", "stdout"), (" 2> ", "stderr")]:
         command, separator, filename = input.partition(operator)
         if separator:
-            return command, filename
-    return input, None
+            return command, filename, stream
+    return input, None, None
 
 def parser(arg : str):
     current_arg = ""
