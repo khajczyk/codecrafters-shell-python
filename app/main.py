@@ -56,8 +56,7 @@ def main():
             except:
                 output = f"cd: {argument}: No such file or directory\n"
         else:
-            print(f"{user_input}: command not found\n")
-
+            print(f"{user_input}: command not found")
         if output != "":
             if redir_file:
                 file_dir = echo_quote_parser(redir_file)[0]
