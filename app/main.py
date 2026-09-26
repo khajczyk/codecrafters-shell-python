@@ -11,7 +11,7 @@ DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 def main():
     readline.set_completer(complete)
     readline.set_completer_delims(" \t")
-    readline.parse_and_bind("tab: complete")
+    readline.parse_and_bind("bind ^I rl_complete")
     while True:
         user_input = input("$ ")
         command_text, redirect_target, stream, append = redirect(user_input)
@@ -129,6 +129,7 @@ def complete(text, state):
             matches.append(dir)
 
     if state < len(matches):
+        print(matches[state])
         return matches[state] + " "
     return None
 
