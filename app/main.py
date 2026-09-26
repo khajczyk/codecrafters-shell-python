@@ -123,7 +123,6 @@ def complete(text, state):
     )
 
     dirs = os.environ["PATH"].split(":")
-    print(dirs)
     for dir in dirs:
         if os.path.exists(dir):
             listdirs = os.listdir(dir)
