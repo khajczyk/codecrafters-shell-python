@@ -121,10 +121,12 @@ def complete(text, state):
     matches = sorted(
         command for command in BUILTINS
         if command.startswith(text)
-    ) + sorted(
-        command for command in os.get_exec_path
-        if command.startswith(text)
     )
+
+    dirs = os.environ["PATH"].split(":")
+    for dir in dirs:
+        if os.path.exists(dir):
+            matches.append(dir)
 
     if state < len(matches):
         return matches[state] + " "
