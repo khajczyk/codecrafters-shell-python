@@ -122,9 +122,12 @@ def complete(text, state):
         command for command in BUILTINS
         if command.startswith(text)
     )
+    print("HERE")
 
     dirs = os.environ["PATH"].split(":")
+    print(dirs)
     for dir in dirs:
+        print("Ive entered")
         if os.path.exists(dir) and dir.startswith(text):
             print(dir)
             matches.append(dir)
