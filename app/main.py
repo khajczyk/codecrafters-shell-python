@@ -28,7 +28,7 @@ def main():
         if user_input == "exit":
             break
         elif split[0] == "echo":
-            output = f"{" ".join(echo_quote_parser(argument))}"
+            output = f"{" ".join(echo_quote_parser(argument))}\n"
         elif split[0] == "type":
             if argument in commands:
                 output = f"{argument} is a shell builtin\n"
@@ -46,7 +46,7 @@ def main():
             else:
                 subprocess.call(echo_quote_parser(user_input))
         elif user_input == "pwd":
-            output = os.path.abspath(os.getcwd())
+            output = os.path.abspath(os.getcwd()) + "\n"
         elif split[0] == "cd":
             try:
                 if not argument or argument[0] == "~":
@@ -54,7 +54,7 @@ def main():
                 else:
                     os.chdir(argument)
             except:
-                output = f"cd: {argument}: No such file or directory"
+                output = f"cd: {argument}: No such file or directory\n"
         else:
             print(f"{user_input}: command not found\n")
 
@@ -65,7 +65,7 @@ def main():
                 with open(file_dir, "w") as file:
                     file.write(output)
             else:
-                print(output)
+                print(output, end="")
     pass
 
 def echo_quote_parser(arg : str):
