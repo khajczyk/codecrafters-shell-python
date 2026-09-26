@@ -130,7 +130,6 @@ def complete(text, state):
             matches.append(os.listdir(dir))
 
     if state < len(matches):
-        print("HELLO")
         return matches[state] + " "
     return None
 
