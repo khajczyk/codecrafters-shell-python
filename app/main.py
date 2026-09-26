@@ -122,13 +122,13 @@ def complete(text, state):
         if command.startswith(text)
     )
 
-    dirs = os.environ["PATH"].split(":")
-    for dir in dirs:
-        if os.path.exists(dir):
-            listdirs = os.listdir(dir)
-            for listdir in listdirs:
-                if listdir.startswith(text):
-                    matches.append(listdir)
+    for directory in os.get_exec_path():
+        directory = directory or "."
+        if os.path.isdir(directory):
+            matches.extend(
+                name for name in os.listdir(directory)
+                if name.startswith(text)
+            )
 
     if state < len(matches):
         return matches[state] + " "
