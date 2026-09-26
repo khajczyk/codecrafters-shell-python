@@ -1,4 +1,4 @@
-import nullcontext
+import contextlib
 import sys
 import os
 import shutil
@@ -22,7 +22,7 @@ def main():
             filename = parser(redirect_target)[0]
             destination = open(filename, "w")
         else:
-            destination = nullcontext(sys.stdout)
+            destination = contextlib.nullcontext(sys.stdout)
         
         with destination as stdout:
             if command == "exit":
