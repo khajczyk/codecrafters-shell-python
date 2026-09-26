@@ -10,7 +10,7 @@ DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 def main():
     while True:
         user_input = input("$ ")
-        command_text, redirect_target, stream = redirect(user_input)
+        command_text, redirect_target, stream, append = redirect(user_input)
         tokens = parser(command_text)
 
         if not tokens:
@@ -23,7 +23,8 @@ def main():
             directory = os.path.dirname(filename)
             if directory:
                 os.makedirs(directory, exist_ok=True)
-            destination = open(filename, "w")
+            append_to_file = "a" if append else "w"
+            destination = open(filename, append_to_file)
         else:
             destination = contextlib.nullcontext(sys.stdout)
         
@@ -61,11 +62,16 @@ def main():
                 print(f"{command}: command not found", file=stderr)
     
 def redirect(input : str):
-    for operator, stream in [(" > ", "stdout"), (" 1> ", "stdout"), (" 2> ", "stderr")]:
+    for operator, stream, append in [
+        (" > ", "stdout", False),
+        (" >> ", "stdout", True),
+        (" 1> ", "stdout", False),
+        (" 1>> ", "stdout", True),
+        (" 2> ", "stderr", False)]:
         command, separator, filename = input.partition(operator)
         if separator:
-            return command, filename, stream
-    return input, None, None
+            return command, filename, stream, append
+    return input, None, None, False
 
 def parser(arg : str):
     current_arg = ""
