@@ -50,7 +50,10 @@ def main():
                     print(f"cd: {target}: No such file or directory", file=stdout)
 
             elif shutil.which(command):
-                subprocess.call(tokens, stdout=stdout)
+                try:
+                    subprocess.call(tokens, stdout=stdout)
+                except:
+                    print("PANIC")
             else:
                 print(f"{command}: command not found", file=stdout)
     pass
