@@ -3,7 +3,6 @@ import sys
 import os
 import shutil
 import subprocess
-import rlcompleter
 import readline
 
 BUILTINS = ["exit", "echo", "type", "pwd", "cd"]
@@ -11,6 +10,7 @@ DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 
 def main():
     readline.set_completer(complete)
+    readline.set_completer_delims(" \t")
     readline.parse_and_bind("tab: complete")
 
     while True:
@@ -119,18 +119,14 @@ def parser(arg : str):
     return result
 
 def complete(text, state):
+    print(f"\nCOMPLETER: {text!r}, state={state}", file=sys.stderr)
     matches = sorted(
         command for command in BUILTINS
         if command.startswith(text)
     ) 
-    + sorted(
-        command for command in sys.path
-        if command.startswith(text)
-    )
 
     if state < len(matches):
         return matches[state] + " "
-    
     return None
 
 if __name__ == "__main__":
