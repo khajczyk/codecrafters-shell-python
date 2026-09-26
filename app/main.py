@@ -24,7 +24,6 @@ def main():
             if directory:
                 os.makedirs(directory, exist_ok=True)
             destination = open(filename, "w")
-            print(destination)
         else:
             destination = contextlib.nullcontext(sys.stdout)
         
@@ -54,7 +53,7 @@ def main():
                     print(f"cd: {target}: No such file or directory", file=stdout)
 
             elif shutil.which(command):
-                subprocess.call(tokens, stdout=stdout)
+                subprocess.call(tokens, stdout=stdout, stderr=stdout)
             else:
                 print(f"{command}: command not found", file=stdout)
     pass
