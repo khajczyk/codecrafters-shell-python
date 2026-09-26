@@ -39,7 +39,9 @@ def main():
                     output = f"{argument}: not found\n"
         elif shutil.which(echo_quote_parser(user_input)[0]):
             if redir_file:
-                with open(echo_quote_parser(redir_file)[0], "w") as file:
+                file_dir = echo_quote_parser(redir_file)[0]
+                os.makedirs(file_dir.split("/")[:-1], exist_ok=True)
+                with open(file_dir, "w") as file:
                     subprocess.call(echo_quote_parser(user_input), stdout=file)
             else:
                 subprocess.call(echo_quote_parser(user_input))
@@ -55,7 +57,9 @@ def main():
                 output = f"cd: {argument}: No such file or directory"
         elif output != "":
             if redir_file:
-                with open(echo_quote_parser(redir_file), "w") as file:
+                file_dir = echo_quote_parser(redir_file)[0]
+                os.makedirs(file_dir.split("/")[:-1], exist_ok=True)
+                with open(file_dir, "w") as file:
                     file.write(output)
             else:
                 print(output)
