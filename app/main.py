@@ -24,6 +24,7 @@ def main():
             if directory:
                 os.makedirs(directory, exist_ok=True)
             destination = open(filename, "w")
+            print(destination)
         else:
             destination = contextlib.nullcontext(sys.stdout)
         
