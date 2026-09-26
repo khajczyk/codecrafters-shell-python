@@ -122,10 +122,15 @@ def complete(text, state):
     matches = sorted(
         command for command in BUILTINS
         if command.startswith(text)
+    ) 
+    + sorted(
+        command for command in sys.path
+        if command.startswith(text)
     )
 
     if state < len(matches):
         return matches[state] + " "
+    
     return None
 
 if __name__ == "__main__":
