@@ -138,11 +138,12 @@ def complete(text, state):
     tokens = text.split("/")
 
     if tokens:
-        *cust_dir_path, cust_file = tokens
-        
+        directory, prefix = os.path.split(text)
+
         matches.extend(
-            name for name in os.listdir("/".join(cust_dir_path))
-            if name
+            os.path.join(directory, name)
+            for name in os.listdir(directory or ".")
+            if name.startswith(prefix)
         )
 
     if state < len(matches):
