@@ -135,6 +135,8 @@ def complete(text, state):
         name for name in os.listdir()
         if name.startswith(text)
     )
+
+    print(os.listdir())
     
     
     dir, prefix = os.path.split(text)
