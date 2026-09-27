@@ -62,7 +62,7 @@ def main():
                     print(f"cd: {target}: No such file or directory", file=stderr)
             elif command == "complete":
                 if args[0] == "-C":
-                    REGISTERED_COMPLETES[args[2], args[1]]
+                    REGISTERED_COMPLETES[args[2]] = args[1]
                 if args[0] == "-p":
                     if args[1] in REGISTERED_COMPLETES:
                         print(f"complete -C '{REGISTERED_COMPLETES[args[1]]}' {args[1]}")
