@@ -149,7 +149,7 @@ def complete(text, state):
         name for name in os.listdir()
         if os.path.isdir(name) and name.startswith(text)
     )
-
+    print(matches)
     matches = sorted(set(matches))
 
     if state < len(matches):
