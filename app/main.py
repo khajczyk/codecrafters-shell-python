@@ -142,7 +142,7 @@ def complete(text, state):
         
         matches.extend(
             name for name in os.listdir("/".join(cust_dir_path))
-            
+            if name
         )
 
     if state < len(matches):
