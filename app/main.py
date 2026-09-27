@@ -5,7 +5,7 @@ import shutil
 import subprocess
 import readline
 
-BUILTINS = ["exit", "echo", "type", "pwd", "cd"]
+BUILTINS = ["exit", "echo", "type", "pwd", "cd", "complete"]
 DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 
 def main():
