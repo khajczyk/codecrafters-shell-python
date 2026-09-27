@@ -136,11 +136,8 @@ def complete(text, state):
         if name.startswith(text)
     )
     
-    print(text)
-
     if "/" in text:
         dir, prefix = os.path.split(text)
-        print("im here")
         if os.path.isdir(dir):
             print(dir, prefix)
             matches.extend(
