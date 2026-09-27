@@ -119,7 +119,7 @@ def parser(arg : str):
 
 def complete(text, state):
     matches = []
-    before_word = readline.get_line_buffer()[readline.get_begidx()]
+    before_word = readline.get_line_buffer()[:readline.get_begidx()]
 
     if not before_word.strip():
         matches = sorted(
