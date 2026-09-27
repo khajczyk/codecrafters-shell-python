@@ -10,7 +10,7 @@ DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 
 def main():
     readline.set_completer(complete)
-    readline.set_completer_delims(" \t\n")
+    readline.set_completer_delims(" \t")
     readline.parse_and_bind("tab: complete")
     while True:
         user_input = input("$ ")
