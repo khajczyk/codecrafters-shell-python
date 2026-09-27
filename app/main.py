@@ -147,6 +147,7 @@ def complete(text, state):
 
     matches.extend(
         name for name in os.listdir()
+        if os.path.isdir(name) and name.startswith(text)
     )
 
     matches = sorted(set(matches))
