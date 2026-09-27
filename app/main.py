@@ -135,6 +135,7 @@ def complete(text, state):
         if name.startswith(text)
     )
     
+    print(text)
 
     if "/" in text:
         dir, prefix = os.path.split(text)
