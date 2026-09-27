@@ -138,6 +138,7 @@ def complete(text, state):
     if "/" in text:
         dir, prefix = os.path.split(text)
         if os.path.isdir(dir):
+            print(dir, prefix)
             matches.extend(
                 os.path.join(dir, name)
                 for name in os.listdir(dir)
