@@ -135,16 +135,15 @@ def complete(text, state):
         if name.startswith(text)
     )
 
-    tokens = text.split("/")
+    if "/" in text:
+        dir, prefix = os.path.split(text)
 
-    if tokens:
-        directory, prefix = os.path.split(text)
-
-        matches.extend(
-            os.path.join(directory, name)
-            for name in os.listdir(directory or ".")
-            if name.startswith(prefix)
-        )
+        if os.path.isdir(dir):
+            matches.extend(
+                os.path.join(dir, name)
+                for name in os.listdir(dir)
+                if name.startswith(prefix)
+            )
 
     if state < len(matches):
         return matches[state] + " "
