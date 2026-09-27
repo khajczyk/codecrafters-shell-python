@@ -7,6 +7,7 @@ import readline
 
 BUILTINS = ["exit", "echo", "type", "pwd", "cd", "complete"]
 DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
+REGISTERED_COMPLETES = []
 
 def main():
     readline.set_completer(complete)
@@ -59,7 +60,9 @@ def main():
                     os.chdir(target)
                 except:
                     print(f"cd: {target}: No such file or directory", file=stderr)
-
+            elif command == "complete":
+                if args[0] == "-p" and args[1] not in REGISTERED_COMPLETES:
+                    print(f"complete: {args[0]}: no completion specification", file=stderr)
             elif shutil.which(command):
                 subprocess.call(tokens, stdout=stdout, stderr=stderr)
             else:
