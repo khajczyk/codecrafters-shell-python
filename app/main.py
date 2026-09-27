@@ -135,6 +135,16 @@ def complete(text, state):
         if name.startswith(text)
     )
 
+    tokens = text.split("/")
+
+    if tokens:
+        *cust_dir_path, cust_file = tokens
+        
+        matches.extend(
+            name for name in os.listdir("/".join(cust_dir_path))
+            if name.startswith(cust_file)
+        )
+
     if state < len(matches):
         return matches[state] + " "
     return None
