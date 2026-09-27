@@ -145,8 +145,12 @@ def complete(text, state):
                 if name.startswith(prefix)
             )
 
+    imatches = sorted(set(matches))
+
     if state < len(matches):
-        return matches[state] + " "
+        match = matches[state]
+        return match + ("/" if os.path.isdir(match) else " ")
+
     return None
 
 if __name__ == "__main__":
