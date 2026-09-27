@@ -135,16 +135,20 @@ def complete(text, state):
         name for name in os.listdir()
         if name.startswith(text)
     )
-
-    print(os.listdir(), text)
     
-    dir, prefix = os.path.split(text)
-    if os.path.isdir(dir):
-        matches.extend(
-            os.path.join(dir, name)
-            for name in os.listdir(dir)
-            if name.startswith(prefix)
-        )
+    if "/" in text:
+        dir, prefix = os.path.split(text)
+        if os.path.isdir(dir):
+            matches.extend(
+                os.path.join(dir, name)
+                for name in os.listdir(dir)
+                if name.startswith(prefix)
+            )
+
+    matches.extend(
+        name for name in os.listdir()
+        if name
+    )
 
     matches = sorted(set(matches))
 
