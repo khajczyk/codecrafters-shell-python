@@ -118,18 +118,22 @@ def parser(arg : str):
     return result
 
 def complete(text, state):
-    matches = sorted(
-        command for command in BUILTINS
-        if command.startswith(text)
-    )
-    
-    for path_directory in os.get_exec_path():
-        path_directory = path_directory or "."
-        if os.path.isdir(path_directory):
-            matches.extend(
-                name for name in os.listdir(path_directory)
-                if name.startswith(text)
-            )
+    matches = []
+    before_word = readline.get_line_buffer()[readline.get_begidx()]
+
+    if not before_word.strip():
+        matches = sorted(
+            command for command in BUILTINS
+            if command.startswith(text)
+        )
+        
+        for path_directory in os.get_exec_path():
+            path_directory = path_directory or "."
+            if os.path.isdir(path_directory):
+                matches.extend(
+                    name for name in os.listdir(path_directory)
+                    if name.startswith(text)
+                )
 
     matches.extend(
         name for name in os.listdir()
@@ -145,11 +149,6 @@ def complete(text, state):
                 if name.startswith(prefix)
             )
 
-    matches.extend(
-        name for name in os.listdir()
-        if os.path.isdir(name) and name.startswith(text)
-    )
-    print(matches)
     matches = sorted(set(matches))
 
     if state < len(matches):
