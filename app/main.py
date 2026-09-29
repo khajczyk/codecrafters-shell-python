@@ -156,7 +156,7 @@ def complete(text, state):
                 cwd=os.getcwd()
             )
             if result.stdout:
-                matches.append(result.stdout.strip())
+                return result.stdout.strip() + " "
             else:
                 print("\x07")
         else:
@@ -174,6 +174,8 @@ def complete(text, state):
                         if name.startswith(prefix)
                     )
 
+    matches = sorted(set(matches))
+    
     if state < len(matches):
         match = matches[state]
         return match + ("/" if os.path.isdir(match) else " ")
