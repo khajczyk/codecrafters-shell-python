@@ -151,7 +151,7 @@ def complete(text, state):
             if result.stdout.strip("\n"):
                 print(result.stdout.strip("\n"), end=" ")
             else:
-                print("\x07", end="", flush=True)
+                print("\x07")
         else:
             matches.extend(
                 name for name in os.listdir()
