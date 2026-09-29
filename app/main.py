@@ -144,12 +144,12 @@ def complete(text, state):
                     if name.startswith(text)
                 )
     else:
-        print(text)
-        if before_word.strip() in REGISTERED_COMPLETES:
+        args = before_word.strip().split(" ")
+        if args[0] in REGISTERED_COMPLETES:
             result = subprocess.run(
                 REGISTERED_COMPLETES[before_word.strip()], capture_output=True, text=True, cwd=os.getcwd()
             )
-            print("text")
+            print(text)
             if result.stdout.strip("\n"):
                 print(result.stdout.strip("\n"), end=" ")
             else:
