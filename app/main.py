@@ -63,6 +63,7 @@ def main():
             elif command == "complete":
                 if args[0] == "-C":
                     REGISTERED_COMPLETES[args[2]] = args[1]
+                    subprocess.call([args[2], args[1]], stdout=stdout, stderr=stderr)
                 if args[0] == "-p":
                     if args[1] in REGISTERED_COMPLETES:
                         print(f"complete -C '{REGISTERED_COMPLETES[args[1]]}' {args[1]}")
@@ -150,12 +151,11 @@ def complete(text, state):
                 if name.startswith(text)
             )
         else:
-
             matches.extend(
                 name for name in os.listdir()
                 if name.startswith(text)
             )
-    
+
             if "/" in text:
                 dir, prefix = os.path.split(text)
                 if os.path.isdir(dir):
