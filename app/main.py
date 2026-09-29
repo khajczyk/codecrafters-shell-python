@@ -149,8 +149,7 @@ def complete(text, state):
             result = subprocess.run(
                 REGISTERED_COMPLETES[args[0]], capture_output=True, text=True, cwd=os.getcwd()
             )
-            print(text)
-            print(f"{result}")
+            print(REGISTERED_COMPLETES[args[0]])
             if result.stdout:
                 print(result.stdout.strip("\n"), end=" ")
             else:
