@@ -150,7 +150,7 @@ def complete(text, state):
                 REGISTERED_COMPLETES[before_word.strip()], capture_output=True, text=True, cwd=os.getcwd()
             )
             print(text)
-            print(result)
+            print(f"{result}")
             if result.stdout.strip("\n"):
                 print(result.stdout.strip("\n"), end=" ")
             else:
