@@ -174,8 +174,7 @@ def complete(text, state):
                         if name.startswith(prefix)
                     )
 
-    print(state)
-    print(len(matches))
+    print(matches)
     if state < len(matches):
         match = matches[state]
         return match + ("/" if os.path.isdir(match) else " ")
