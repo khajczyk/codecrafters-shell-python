@@ -144,7 +144,7 @@ def complete(text, state):
                     if name.startswith(text)
                 )
     else:
-        args = text.split(" ")
+        args = readline.get_line_buffer().split(" ")
         print(args)
         arg1 = args[0]
         if arg1 in REGISTERED_COMPLETES:
