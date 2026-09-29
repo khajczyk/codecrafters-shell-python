@@ -149,7 +149,7 @@ def complete(text, state):
         if before_word.strip() in REGISTERED_COMPLETES:
             print("this is strue")
             result = subprocess.run(
-                REGISTERED_COMPLETES[before_word.strip()], capture_output=True, text=True, cwd=Path.cwd()
+                REGISTERED_COMPLETES[before_word.strip()], capture_output=True, text=True, cwd=os.getcwd()
             )
             print("IM HERE")
             print(result, end=" ")
