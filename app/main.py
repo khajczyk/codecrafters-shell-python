@@ -152,7 +152,7 @@ def complete(text, state):
         if arg1 in REGISTERED_COMPLETES:
             arg2 = args[-1]
             arg3 = args[1] if len(args) > 2 else ""
-            
+            print(f"args {args}")
             result = subprocess.run(
                 [REGISTERED_COMPLETES[arg1], arg1, arg2, arg3],
                 capture_output=True, 
