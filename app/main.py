@@ -156,7 +156,7 @@ def complete(text, state):
                 cwd=os.getcwd()
             )
             if result.stdout:
-                print(args[:-1], result.stdout.strip(), end=" ")
+                print(result.stdout.strip(), end=" ")
             else:
                 print("\x07")
         else:
