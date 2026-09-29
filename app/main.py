@@ -174,7 +174,6 @@ def complete(text, state):
                         if name.startswith(prefix)
                     )
 
-    matches = sorted(set(matches))
     print(state)
     print(len(matches))
     if state < len(matches):
