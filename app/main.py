@@ -143,20 +143,27 @@ def complete(text, state):
                     name for name in os.listdir(path_directory)
                     if name.startswith(text)
                 )
-
-    matches.extend(
-        name for name in os.listdir()
-        if name.startswith(text)
-    )
-    
-    if "/" in text:
-        dir, prefix = os.path.split(text)
-        if os.path.isdir(dir):
+    else:
+        if before_word.strip() in REGISTERED_COMPLETES:
             matches.extend(
-                os.path.join(dir, name)
-                for name in os.listdir(dir)
-                if name.startswith(prefix)
+                name for name in REGISTERED_COMPLETES
+                if name.startswith(text)
             )
+        else:
+
+            matches.extend(
+                name for name in os.listdir()
+                if name.startswith(text)
+            )
+    
+            if "/" in text:
+                dir, prefix = os.path.split(text)
+                if os.path.isdir(dir):
+                    matches.extend(
+                        os.path.join(dir, name)
+                        for name in os.listdir(dir)
+                        if name.startswith(prefix)
+                    )
 
     matches = sorted(set(matches))
 
