@@ -159,6 +159,7 @@ def complete(text, state):
                 cwd=os.getcwd(),
                 env={**os.environ, "COMP_LINE": line, "COMP_POINT": str(len(line))}
             )
+            print(result.stdout)
             if result.stdout:
                 matches.append(result.stdout.strip())
             else:
