@@ -148,7 +148,8 @@ def complete(text, state):
             result = subprocess.run(
                 REGISTERED_COMPLETES[before_word.strip()], capture_output=True, text=True, cwd=Path.cwd()
             )
-            print(result.stdout.replace("\n", ""), end=" ")
+            print("IM HERE")
+            print(result, end=" ")
         else:
             matches.extend(
                 name for name in os.listdir()
