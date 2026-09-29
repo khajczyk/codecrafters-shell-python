@@ -130,8 +130,7 @@ def parser(arg : str):
 
 def complete(text, state):
     matches = []
-    COMP_LINE = readline.get_line_buffer()
-    before_word = COMP_LINE[:readline.get_begidx()]
+    before_word = readline.get_line_buffer()[:readline.get_begidx()]
 
     if not before_word.strip():
         matches = sorted(
@@ -147,7 +146,7 @@ def complete(text, state):
                     if name.startswith(text)
                 )
     else:
-        args = COMP_LINE.split(" ")
+        args = readline.get_line_buffer().split(" ")
         arg1 = args[0]
         if arg1 in REGISTERED_COMPLETES:
             arg2 = args[-1]
@@ -157,7 +156,8 @@ def complete(text, state):
                 [REGISTERED_COMPLETES[arg1], arg1, arg2, arg3],
                 capture_output=True, 
                 text=True, 
-                cwd=os.getcwd()
+                cwd=os.getcwd(),
+                env={**os.environ, "COMP_LINE": text, "COMP_POINT": str(len(text))}
             )
             if result.stdout:
                 matches.append(result.stdout.strip())
