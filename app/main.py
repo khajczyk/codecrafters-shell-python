@@ -168,6 +168,7 @@ def complete(text, state):
 
     if state < len(matches):
         match = matches[state]
+        print(match)
         return match + ("/" if os.path.isdir(match) else " ")
 
     return None
