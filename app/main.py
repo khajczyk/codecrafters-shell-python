@@ -146,7 +146,8 @@ def complete(text, state):
                     if name.startswith(text)
                 )
     else:
-        args = readline.get_line_buffer().split(" ")
+        line = readline.get_line_buffer()
+        args = line.split(" ")
         arg1 = args[0]
         if arg1 in REGISTERED_COMPLETES:
             arg2 = args[-1]
@@ -157,7 +158,7 @@ def complete(text, state):
                 capture_output=True, 
                 text=True, 
                 cwd=os.getcwd(),
-                env={**os.environ, "COMP_LINE": text, "COMP_POINT": str(len(text))}
+                env={**os.environ, "COMP_LINE": line, "COMP_POINT": str(len(line))}
             )
             if result.stdout:
                 matches.append(result.stdout.strip())
