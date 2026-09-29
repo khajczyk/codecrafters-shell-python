@@ -132,6 +132,7 @@ def complete(text, state):
     matches = []
     COMP_LINE = readline.get_line_buffer()
     COMP_POINT = readline.get_begidx()
+    print(COMP_LINE)
     before_word = COMP_LINE[:COMP_POINT]
 
     if not before_word.strip():
