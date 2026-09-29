@@ -155,6 +155,7 @@ def complete(text, state):
                 text=True, 
                 cwd=os.getcwd()
             )
+            print(f"{result}")
             if result.stdout:
                 print(result.stdout.strip("\n"), end=" ")
             else:
