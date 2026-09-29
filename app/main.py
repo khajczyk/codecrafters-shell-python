@@ -145,6 +145,7 @@ def complete(text, state):
                 )
     else:
         args = before_word.strip().split(" ")
+        print(args)
         arg1 = args[0]
         if arg1 in REGISTERED_COMPLETES:
             arg2 = args[-1]
