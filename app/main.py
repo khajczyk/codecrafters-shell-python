@@ -157,7 +157,7 @@ def complete(text, state):
             )
             print(f"{result}")
             if result.stdout:
-                print(result.stdout.strip("\n"), end=" ")
+                print(result.stdout.strip(), end=" ")
             else:
                 print("\x07")
         else:
