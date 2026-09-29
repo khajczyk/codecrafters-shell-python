@@ -147,11 +147,11 @@ def complete(text, state):
         args = before_word.strip().split(" ")
         if args[0] in REGISTERED_COMPLETES:
             result = subprocess.run(
-                REGISTERED_COMPLETES[before_word.strip()], capture_output=True, text=True, cwd=os.getcwd()
+                REGISTERED_COMPLETES[args[0]], capture_output=True, text=True, cwd=os.getcwd()
             )
             print(text)
             print(f"{result}")
-            if result.stdout.strip("\n"):
+            if result.stdout:
                 print(result.stdout.strip("\n"), end=" ")
             else:
                 print("\x07")
