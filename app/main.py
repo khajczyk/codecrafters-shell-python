@@ -144,7 +144,8 @@ def complete(text, state):
                     if name.startswith(text)
                 )
     else:
-        arg1 = before_word.strip().split(" ")
+        args = before_word.strip().split(" ")
+        arg1 = args[0]
         if arg1 in REGISTERED_COMPLETES:
             arg2 = args[-1]
             arg3 = args[1] if len(args) < 2 else ""
