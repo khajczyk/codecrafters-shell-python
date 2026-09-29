@@ -152,7 +152,6 @@ def complete(text, state):
         if arg1 in REGISTERED_COMPLETES:
             arg2 = args[-1]
             arg3 = args[1] if len(args) > 2 else ""
-            print(f"args {args}")
             result = subprocess.run(
                 [REGISTERED_COMPLETES[arg1], arg1, arg2, arg3],
                 capture_output=True, 
@@ -160,9 +159,8 @@ def complete(text, state):
                 cwd=os.getcwd(),
                 env={**os.environ, "COMP_LINE": line, "COMP_POINT": str(len(line))}
             )
-            print(f" IM HERE {result.stdout}")
+            print(f" IM HERE {result}")
             if result.stdout:
-                
                 matches.append(result.stdout.strip())
             else:
                 print("\x07")
