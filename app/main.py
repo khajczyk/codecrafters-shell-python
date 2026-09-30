@@ -65,12 +65,13 @@ def main():
             elif command == "complete":
                 if args[0] == "-C":
                     REGISTERED_COMPLETES[args[2]] = args[1]
-                if args[0] == "-p":
+                elif args[0] == "-p":
                     if args[1] in REGISTERED_COMPLETES:
                         print(f"complete -C '{REGISTERED_COMPLETES[args[1]]}' {args[1]}")
                     else:
                         print(f"complete: {args[1]}: no completion specification", file=stderr)
-
+                elif args[0] == "-r":
+                    del REGISTERED_COMPLETES[args[1]]
             elif shutil.which(command):
                 subprocess.call(tokens, stdout=stdout, stderr=stderr)
             else:
