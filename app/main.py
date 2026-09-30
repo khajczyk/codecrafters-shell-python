@@ -75,7 +75,11 @@ def main():
             elif command == "jobs":
                 pass
             elif shutil.which(command):
-                subprocess.call(tokens, stdout=stdout, stderr=stderr)
+                if tokens[-1] == "&":
+                    tokens = tokens[:-1]
+                    subprocess.Popen(tokens, stdout=stdout, stderr=stderr, start_new_session=True)
+                else:
+                    subprocess.call(tokens, stdout=stdout, stderr=stderr)
             else:
                 print(f"{command}: command not found", file=stderr)
     
