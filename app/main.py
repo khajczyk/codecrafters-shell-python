@@ -21,6 +21,7 @@ class State(str, enum.Enum):
 
 @dataclass(order=True)
 class Job():
+    id: int
     status: State
     command: str
 
@@ -86,15 +87,15 @@ def main():
                 elif args[0] == "-r":
                     del REGISTERED_COMPLETES[args[1]]
             elif command == "jobs":
-                for i, job in enumerate(JOBS):
-                    print(f"{i + 1}+ {job.status}")
+                for job in JOBS:
+                    print(f"{job.id}+ {job.status}")
             elif shutil.which(command):
                 if tokens[-1] == "&":
                     tokens = tokens[:-1]
                     process = subprocess.Popen(tokens, stdout=stdout, stderr=stderr, start_new_session=True)
-                    job = Job(status=State.RUNNING, command=user_input)
+                    job = Job(id=len(JOBS) + 1, status=State.RUNNING, command=user_input)
                     JOBS.append(job)
-                    print(f"[{len(JOBS[job])}] {process.pid}")
+                    print(f"[{job.id}] {process.pid}")
                 else:
                     subprocess.call(tokens, stdout=stdout, stderr=stderr)
             else:
