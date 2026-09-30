@@ -6,6 +6,7 @@ import subprocess
 import readline
 import enum
 from dataclasses import dataclass
+from itertools import count
 
 
 BUILTINS = ["exit", "echo", "type", "pwd", "cd", "complete", "jobs"]
@@ -14,16 +15,18 @@ REGISTERED_COMPLETES = {}
 JOBS: list[Job] = []
 COMP_LINE = ""
 COMP_POINT = ""
-
+_job_counter = count(1)
 
 class State(str, enum.Enum):
     RUNNING = "Running"
+    DONE = "Done"
 
 @dataclass(order=True)
 class Job():
     id: int
     status: State
     command: str
+    process : subprocess.Popen
 
 def main():
     readline.set_completer(complete)
@@ -89,12 +92,14 @@ def main():
             elif command == "jobs":
                 for job in JOBS:
                     indicator =  "+" if job.id == len(JOBS) else "-" if job.id == len(JOBS) - 1 else " "
+                    if job.process.poll() is not None:
+                        job.status = State.DONE
                     print(f"[{job.id}]{indicator} {job.status.value}{" " * (24 - len(job.status.value))}{job.command}")
             elif shutil.which(command):
                 if tokens[-1] == "&":
                     tokens = tokens[:-1]
-                    process = subprocess.Popen(tokens, stdout=stdout, stderr=stderr, start_new_session=True)
-                    job = Job(id=len(JOBS) + 1, status=State.RUNNING, command=user_input)
+                    process = subprocess.Popen(tokens, stdout=stdout, stderr=stderr, start_new_session=True, )
+                    job = Job(id=next(_job_counter), status=State.RUNNING, command=user_input, process=process)
                     JOBS.append(job)
                     print(f"[{job.id}] {process.pid}")
                 else:
