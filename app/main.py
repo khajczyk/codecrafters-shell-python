@@ -153,13 +153,12 @@ def complete(text, state):
             arg2 = args[-1]
             arg3 = args[1] if len(args) > 2 else ""
             result = subprocess.run(
-                [REGISTERED_COMPLETES[arg1], arg1],
+                [REGISTERED_COMPLETES[arg1], arg1, arg2],
                 capture_output=True, 
                 text=True, 
                 cwd=os.getcwd(),
                 env={**os.environ, "COMP_LINE": line, "COMP_POINT": str(len(line))}
             )
-            print(result)
             if result.stdout:
                 matches.append(result.stdout.strip())
             else:
