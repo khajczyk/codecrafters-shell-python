@@ -6,7 +6,6 @@ import subprocess
 import readline
 import enum
 from dataclasses import dataclass
-from itertools import count
 
 
 BUILTINS = ["exit", "echo", "type", "pwd", "cd", "complete", "jobs"]
@@ -15,7 +14,6 @@ REGISTERED_COMPLETES = {}
 JOBS: list[Job] = []
 COMP_LINE = ""
 COMP_POINT = ""
-_job_counter = count(1)
 
 class State(str, enum.Enum):
     RUNNING = "Running"
@@ -99,8 +97,9 @@ def main():
             elif shutil.which(command):
                 if tokens[-1] == "&":
                     tokens = tokens[:-1]
-                    process = subprocess.Popen(tokens, stdout=stdout, stderr=stderr, start_new_session=True, )
-                    job = Job(id=next(_job_counter), status=State.RUNNING, command=" ".join(tokens), process=process)
+                    process = subprocess.Popen(tokens, stdout=stdout, stderr=stderr, start_new_session=True)
+                    job_id = 1 if len(JOBS) == 0 else JOBS[-1].id + 1
+                    job = Job(id=job_id, status=State.RUNNING, command=" ".join(tokens), process=process)
                     JOBS.append(job)
                     print(f"[{job.id}] {process.pid}")
                 else:
