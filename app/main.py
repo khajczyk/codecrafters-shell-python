@@ -113,8 +113,7 @@ def main():
                 if job.process.poll() is not None:
                     job.status = State.DONE
                     print(f"[{job.id}]{indicator} {job.status.value}{" " * (24 - len(job.status.value))}{job.command}")
-            JOBS[:] = [j for j in JOBS if j.status != State.DONE]
-
+                    JOBS.remove(job)
     
 def redirect(input : str):
     for operator, stream, append in [
