@@ -160,7 +160,7 @@ def complete(text, state):
                 env={**os.environ, "COMP_LINE": line, "COMP_POINT": str(len(line))}
             )
             if result.stdout:
-                matches.append(result.stdout.splitlines())
+                matches.extend(result.stdout.splitlines())
             else:
                 print("\x07")
         else:
