@@ -90,8 +90,9 @@ def main():
                 elif args[0] == "-r":
                     del REGISTERED_COMPLETES[args[1]]
             elif command == "jobs":
+                last, second_last = JOBS[-1], JOBS[-2]
                 for job in JOBS:
-                    indicator =  "+" if job.id == len(JOBS) else "-" if job.id == len(JOBS) - 1 else " "
+                    indicator =  "+" if job == JOBS[-1] else "-" if job == JOBS[-2] else " "
                     if job.process.poll() is not None:
                         job.status = State.DONE
                     print(f"[{job.id}]{indicator} {job.status.value}{" " * (24 - len(job.status.value))}{job.command}")
