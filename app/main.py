@@ -88,7 +88,7 @@ def main():
                     del REGISTERED_COMPLETES[args[1]]
             elif command == "jobs":
                 for job in JOBS:
-                    print(f"{job.id}+ {job.status}")
+                    print(f"[{job.id}]+ {job.status.value}")
             elif shutil.which(command):
                 if tokens[-1] == "&":
                     tokens = tokens[:-1]
