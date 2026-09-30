@@ -108,12 +108,13 @@ def main():
             else:
                 print(f"{command}: command not found", file=stderr)
 
-            for job in filter(lambda j: j.status == State.DONE, JOBS):
+            for job in JOBS:
                 indicator =  "+" if job == JOBS[-1] else "-" if job == JOBS[-2] else " "
                 if job.process.poll() is not None:
                     job.status = State.DONE
                 print(f"[{job.id}]{indicator} {job.status.value}{" " * (24 - len(job.status.value))}{job.command}")
-                JOBS.remove(job)
+            JOBS[:] = [j for j in JOBS if j.status != State.DONE]
+
     
 def redirect(input : str):
     for operator, stream, append in [
