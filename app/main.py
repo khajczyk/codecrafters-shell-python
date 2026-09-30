@@ -4,12 +4,25 @@ import os
 import shutil
 import subprocess
 import readline
+import enum
+from dataclasses import dataclass
+
 
 BUILTINS = ["exit", "echo", "type", "pwd", "cd", "complete", "jobs"]
 DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 REGISTERED_COMPLETES = {}
+JOBS: list[Job] = []
 COMP_LINE = ""
 COMP_POINT = ""
+
+
+class State(str, enum.Enum):
+    RUNNING = "Running"
+
+@dataclass(order=True)
+class Job():
+    status: State
+    command: str
 
 def main():
     readline.set_completer(complete)
@@ -73,12 +86,15 @@ def main():
                 elif args[0] == "-r":
                     del REGISTERED_COMPLETES[args[1]]
             elif command == "jobs":
-                pass
+                for i, job in enumerate(JOBS):
+                    print(f"{i + 1}+ {job.status}")
             elif shutil.which(command):
                 if tokens[-1] == "&":
                     tokens = tokens[:-1]
                     process = subprocess.Popen(tokens, stdout=stdout, stderr=stderr, start_new_session=True)
-                    print(f"[1] {process.pid}")
+                    job = Job(status=State.RUNNING, command=user_input)
+                    JOBS.append(job)
+                    print(f"[{len(JOBS[job])}] {process.pid}")
                 else:
                     subprocess.call(tokens, stdout=stdout, stderr=stderr)
             else:
