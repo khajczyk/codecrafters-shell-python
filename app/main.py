@@ -5,7 +5,7 @@ import shutil
 import subprocess
 import readline
 
-BUILTINS = ["exit", "echo", "type", "pwd", "cd", "complete"]
+BUILTINS = ["exit", "echo", "type", "pwd", "cd", "complete", "jobs"]
 DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 REGISTERED_COMPLETES = {}
 COMP_LINE = ""
