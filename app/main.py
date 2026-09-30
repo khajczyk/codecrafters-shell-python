@@ -77,7 +77,8 @@ def main():
             elif shutil.which(command):
                 if tokens[-1] == "&":
                     tokens = tokens[:-1]
-                    subprocess.Popen(tokens, stdout=stdout, stderr=stderr, start_new_session=True)
+                    process = subprocess.Popen(tokens, stdout=stdout, stderr=stderr, start_new_session=True)
+                    print(f"[1] {process.pid}")
                 else:
                     subprocess.call(tokens, stdout=stdout, stderr=stderr)
             else:
