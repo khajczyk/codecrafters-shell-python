@@ -72,6 +72,8 @@ def main():
                         print(f"complete: {args[1]}: no completion specification", file=stderr)
                 elif args[0] == "-r":
                     del REGISTERED_COMPLETES[args[1]]
+            elif command == "jobs":
+                pass
             elif shutil.which(command):
                 subprocess.call(tokens, stdout=stdout, stderr=stderr)
             else:
