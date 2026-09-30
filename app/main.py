@@ -99,7 +99,7 @@ def main():
                 if tokens[-1] == "&":
                     tokens = tokens[:-1]
                     process = subprocess.Popen(tokens, stdout=stdout, stderr=stderr, start_new_session=True, )
-                    job = Job(id=next(_job_counter), status=State.RUNNING, command=user_input, process=process)
+                    job = Job(id=next(_job_counter), status=State.RUNNING, command=" ".join(tokens), process=process)
                     JOBS.append(job)
                     print(f"[{job.id}] {process.pid}")
                 else:
