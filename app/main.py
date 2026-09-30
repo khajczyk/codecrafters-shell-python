@@ -95,6 +95,8 @@ def main():
                     if job.process.poll() is not None:
                         job.status = State.DONE
                     print(f"[{job.id}]{indicator} {job.status.value}{" " * (24 - len(job.status.value))}{job.command}")
+                    if job.status == State.DONE:
+                        del JOBS[job]
             elif shutil.which(command):
                 if tokens[-1] == "&":
                     tokens = tokens[:-1]
