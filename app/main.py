@@ -88,7 +88,8 @@ def main():
                     del REGISTERED_COMPLETES[args[1]]
             elif command == "jobs":
                 for job in JOBS:
-                    print(f"[{job.id}]+ {job.status.value}{" " * (24 - len(job.status.value))}{job.command}")
+                    indicator =  "+" if job.id == len(JOBS) else "-" if job.id == len(JOBS) - 1 else " "
+                    print(f"[{job.id}]{indicator} {job.status.value}{" " * (24 - len(job.status.value))}{job.command}")
             elif shutil.which(command):
                 if tokens[-1] == "&":
                     tokens = tokens[:-1]
