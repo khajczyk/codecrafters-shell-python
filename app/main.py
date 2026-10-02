@@ -325,8 +325,11 @@ def parser(arg : str):
 
     for i, item in enumerate(result):
         if "$" in item:
-            print(expand(item))
-            result[i] = expand(item)
+            wd = expand(item)
+            if wd:
+                result[i] = expand(item)
+            else:
+                del result[i]
     return result
 
 def expand(item: str) -> str:
