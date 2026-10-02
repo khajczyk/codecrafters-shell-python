@@ -98,6 +98,7 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
                 with open(args[1], "w") as file:
                     for number, record in HISTORY:
                         file.write(record + "\n")
+                return
             elif is_int(args[0]):
                 limit = int(args[0])        
             for number, record in HISTORY[-limit:]:
