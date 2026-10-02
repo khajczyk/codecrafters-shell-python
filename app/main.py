@@ -93,16 +93,18 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
                 with open(args[1], "r") as file:
                     for line in file:
                         append_history(line.strip())
+                file.close()
                 return
             elif args[0] == "-w":
                 with open(args[1], "w") as file:
                     for number, record in HISTORY:
                         file.write(record + "\n")
+                file.close()
                 return
             elif is_int(args[0]):
                 limit = int(args[0])        
-            for number, record in HISTORY[-limit:]:
-                print(f"{number} {record}", file=stdout)
+        for number, record in HISTORY[-limit:]:
+            print(f"{number} {record}", file=stdout)
 
 
 def run_pipeline(segments: list[str]):
