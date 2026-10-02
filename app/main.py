@@ -225,17 +225,16 @@ def main():
             continue
 
         command_text, redirect_target, stream, append = redirect(user_input)
-        tokens = parser(command_text)
+        tokens: list[str] = parser(command_text)
 
         if not tokens:
             continue
-        
-        command, *args = tokens
 
-        for i, arg in enumerate(args):
-            if arg[0] == "$" and arg[1:] in DECLARED_VARIABLES:
-                print(arg[1:])
-                args[i] = DECLARED_VARIABLES[arg[1:]]
+        for i, token in enumerate(tokens):
+            if token[0].startswith("$") and token[1:] in DECLARED_VARIABLES:
+                token[i] = DECLARED_VARIABLES[token[1:]]
+                
+        command, *args = tokens
 
         if redirect_target is not None:
             filename = parser(redirect_target)[0]
