@@ -26,6 +26,8 @@ COMP_LINE = ""
 COMP_POINT = ""
 HISTFILE = os.getenv('HISTFILE')
 DECLARED_VARIABLES = {}
+VAR_REGEX = re.compile(r"\$(?:\{([A-Za-z_][A-Za-z0-9_]*)\}|([A-Za-z_][A-Za-z0-9_]*))")
+
 
 class State(str, enum.Enum):
     RUNNING = "Running"
@@ -324,15 +326,13 @@ def parser(arg : str):
     for i, item in enumerate(result):
         if "$" in item:
             result[i] = expand(item)
-
-    
     return result
 
 def expand(item: str) -> str:
-    regex = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
     def lookup(match):
-        return DECLARED_VARIABLES.get(match.group(1), "")
-    return regex.sub(lookup, item)
+        name = match[1] or match[2]
+        return DECLARED_VARIABLES.get(name, "")
+    return VAR_REGEX.sub(lookup, item)
 
 def complete(text, state):
     matches = []
