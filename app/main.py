@@ -87,13 +87,18 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
     elif command == "jobs":
         print_jobs(stdout, only_done=False)
     elif command == "history":
-        if args and args[0] == "-r":
-            with open(args[1], "r") as file:
-                for line in file:
-                    append_history(line.strip())
-        else:
-            limit = 0
-            if args and is_int(args[0]):
+        limit = 0
+        if args: 
+            if args[0] == "-r":
+                with open(args[1], "r") as file:
+                    for line in file:
+                        append_history(line.strip())
+                return
+            elif args[0] == "-w":
+                with open(args[1], "w") as file:
+                    for number, record in HISTORY:
+                        file.write(record + "\n")
+            elif is_int(args[0]):
                 limit = int(args[0])        
             for number, record in HISTORY[-limit:]:
                 print(f"{number} {record}", file=stdout)
