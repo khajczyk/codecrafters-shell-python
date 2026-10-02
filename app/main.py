@@ -24,7 +24,7 @@ REGISTERED_COMPLETES = {}
 COMP_LINE = ""
 COMP_POINT = ""
 HISTFILE = os.getenv('HISTFILE')
-DECLARED_VARIABLES : list[str]= []
+DECLARED_VARIABLES = {}
 
 class State(str, enum.Enum):
     RUNNING = "Running"
@@ -136,9 +136,12 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
         if args:
             if args[0] == "-p":
                 if args[1] in DECLARED_VARIABLES:
-                    print("")
+                    print(f'declare -- {args[1]}="{DECLARED_VARIABLES[args[1]]}"')
                 else:
                     print(f"declare: {args[1]}: not found", file=stderr)
+            elif "=" in args[0]:
+                name, value = args[0].split("=")
+                DECLARED_VARIABLES[name] = value
 
 def run_pipeline(segments: list[str]):
     argvs = [parser(seg) for seg in segments]
