@@ -84,8 +84,8 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
         print_jobs(stdout, only_done=False)
     elif command == "history":
         records = HISTORY
-        if args[1] and is_int(args[1]):
-            limit = int(args[1])        
+        if args and is_int(args[0]):
+            limit = int(args[0])        
             records = HISTORY[-limit:]
         for i, record in enumerate(records):
             print(f"{i + 1} {record}")
