@@ -173,10 +173,11 @@ def run_pipeline(segments: list[str]):
 
 def load_history():
     hist_file = os.getenv('HISTFILE')
-    with open(hist_file, "r") as file:
-        for line in file:
-            append_history(line.strip())
-    file.close()
+    if hist_file:
+        with open(hist_file, "r") as file:
+            for line in file:
+                append_history(line.strip())
+        file.close()
 
 def main():
     readline.set_completer(complete)
