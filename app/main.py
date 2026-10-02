@@ -332,7 +332,7 @@ def expand(item: str) -> str:
     def lookup(match):
         name = match[1] or match[2]
         return DECLARED_VARIABLES.get(name, "")
-    return VAR_REGEX.sub(lookup, item)
+    return VAR_REGEX.sub(lookup, item) or ""
 
 def complete(text, state):
     matches = []
