@@ -101,6 +101,12 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
                         file.write(record + "\n")
                 file.close()
                 return
+            elif args[0] == "-a":
+                with open(args[1], "a") as file:
+                    for number, record in HISTORY:
+                        file.write(record + "\n")
+                file.close()
+                return
             elif is_int(args[0]):
                 limit = int(args[0])        
         for number, record in HISTORY[-limit:]:
