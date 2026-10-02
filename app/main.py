@@ -43,7 +43,6 @@ def main():
             if shutil.which(tokens[0]):
                 p1 = subprocess.Popen(tokens, stdout=subprocess.PIPE)
                 processes.append(p1.stdout)
-                p1.stdout.close()
 
             if len(command_split) > 2:
                 middle_commands = command_split[1:-1]
@@ -52,7 +51,6 @@ def main():
                     if shutil.which(tokens[0]):
                         p = subprocess.Popen(tokens, stdin=processes[-1], stdout=subprocess.PIPE)
                         processes.append(p.stdout)
-                        p.stdout.close()
 
             tokens = parser(last_command)
             if shutil.which(tokens[0]):
