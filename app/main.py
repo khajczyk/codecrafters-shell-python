@@ -232,7 +232,7 @@ def main():
 
         for i, token in enumerate(tokens):
             if token[0].startswith("$") and token[1:] in DECLARED_VARIABLES:
-                token[i] = DECLARED_VARIABLES[token[1:]]
+                tokens[i] = DECLARED_VARIABLES[token[1:]]
                 
         command, *args = tokens
 
