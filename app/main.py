@@ -136,6 +136,7 @@ def main():
     readline.parse_and_bind("tab: complete")
     while True:
         user_input = input("$ ")
+        HISTORY.append(user_input)
         segments = pipe_split(user_input)
 
         if len(segments) > 1:
@@ -183,7 +184,6 @@ def main():
                 print(f"{command}: command not found", file=stderr)
 
         print_jobs(sys.stdout, True)
-        HISTORY.append(user_input)
             
 def redirect(input : str):
     for operator, stream, append in [
