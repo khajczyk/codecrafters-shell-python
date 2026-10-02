@@ -40,6 +40,13 @@ def print_jobs(stdout, only_done):
         print(f"[{job.id}]{indicator} {job.status.value:<24}{job.command}", file=stdout)
     JOBS[:] = [j for j in JOBS if j.status != State.DONE]
 
+def is_int(s: str) -> bool:
+    try:
+        int(s)
+        return True
+    except ValueError:
+        return False
+
 def run_builtin(command: str, args: list[str], stdout, stderr):
     if command == "echo":
         print(" ".join(args), file=stdout)
@@ -76,7 +83,11 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
     elif command == "jobs":
         print_jobs(stdout, only_done=False)
     elif command == "history":
-        for i, record in enumerate(HISTORY):
+        records = HISTORY
+        if args[1] and is_int(args[1]):
+            limit = int(args[1])        
+            records = HISTORY[-limit:]
+        for i, record in enumerate(records):
             print(f"{i + 1} {record}")
 
 
