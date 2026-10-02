@@ -14,7 +14,6 @@ DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 REGISTERED_COMPLETES = {}
 COMP_LINE = ""
 COMP_POINT = ""
-HISTORY: list[int, str] = []
 
 class State(str, enum.Enum):
     RUNNING = "Running"
@@ -27,7 +26,15 @@ class Job():
     command: str
     process : subprocess.Popen
 
+@dataclass(order=True)
+class History_Record():
+    id: int
+    command: str
+    appended: bool
+
 JOBS: list[Job] = []
+HISTORY: list[History_Record] = []
+
 
 def print_jobs(stdout, only_done):
     last = len(JOBS) - 1
@@ -47,9 +54,10 @@ def is_int(s: str) -> bool:
     except ValueError:
         return False
 
-def append_history(input):
-    length = 1 if len(HISTORY) == 0 else len(HISTORY) + 1
-    HISTORY.append((length, input))
+def append_history(command):
+    id = 1 if len(HISTORY) == 0 else len(HISTORY) + 1
+    record = History_Record(id=id, command=command, appended=False)
+    HISTORY.append(record)
 
 def run_builtin(command: str, args: list[str], stdout, stderr):
     if command == "echo":
@@ -97,20 +105,22 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
                 return
             elif args[0] == "-w":
                 with open(args[1], "w") as file:
-                    for number, record in HISTORY:
-                        file.write(record + "\n")
+                    for record in HISTORY:
+                        file.write(record.command + "\n")
                 file.close()
                 return
             elif args[0] == "-a":
                 with open(args[1], "a") as file:
-                    for number, record in HISTORY:
-                        file.write(record + "\n")
+                    for record in HISTORY:
+                        if not record.appended:
+                            file.write(record.command + "\n")
+                            record.appended = True
                 file.close()
                 return
             elif is_int(args[0]):
                 limit = int(args[0])        
-        for number, record in HISTORY[-limit:]:
-            print(f"{number} {record}", file=stdout)
+        for record in HISTORY[-limit:]:
+            print(f"{record.id} {record.command}", file=stdout)
 
 
 def run_pipeline(segments: list[str]):
