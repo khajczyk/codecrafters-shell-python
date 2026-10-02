@@ -86,8 +86,8 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
         limit = 0
         if args and is_int(args[0]):
             limit = int(args[0])        
-        for record in HISTORY[-limit:]:
-            print(f"{record[0]} {record[1]}", file=stdout)
+        for number, record in HISTORY[-limit:]:
+            print(f"{number} {record}", file=stdout)
 
 
 def run_pipeline(segments: list[str]):
@@ -147,7 +147,7 @@ def main():
     while True:
         user_input = input("$ ")
         length = 1 if len(HISTORY) == 0 else len(HISTORY) + 1
-        HISTORY.append(length, user_input)
+        HISTORY.append((length, user_input))
         segments = pipe_split(user_input)
 
         if len(segments) > 1:
