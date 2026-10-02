@@ -233,9 +233,8 @@ def main():
         command, *args = tokens
 
         for i, arg in enumerate(args):
-            arg = arg.strip("$")
-            if arg in DECLARED_VARIABLES:
-                args[i] = DECLARED_VARIABLES[arg]
+            if arg[1:] in DECLARED_VARIABLES:
+                args[i] = DECLARED_VARIABLES[arg[1:]]
 
         if redirect_target is not None:
             filename = parser(redirect_target)[0]
