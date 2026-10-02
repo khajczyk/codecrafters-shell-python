@@ -7,6 +7,7 @@ import readline
 import enum
 from dataclasses import dataclass
 import io
+import re
 
 
 BUILTINS = ["exit", 
@@ -229,10 +230,6 @@ def main():
 
         if not tokens:
             continue
-
-        for i, token in enumerate(tokens):
-            if token[0].startswith("$") and token[1:] in DECLARED_VARIABLES:
-                tokens[i] = DECLARED_VARIABLES[token[1:]]
                 
         command, *args = tokens
 
@@ -291,7 +288,7 @@ def parser(arg : str):
     current_arg = ""
     argument_started = False
     escape = False
-    result = []
+    result: list[str] = []
     quote = None
     for char in arg:
         if escape:
@@ -323,6 +320,16 @@ def parser(arg : str):
             argument_started = True
     if current_arg or argument_started:
         result.append(current_arg)
+
+    regex = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
+    for i, item in enumerate(result):
+        if "$" in item:
+            reg = regex.sub(item)
+            declared = DECLARED_VARIABLES.get(reg.group(1))
+            if declared:
+                result[i] = declared
+
+    
     return result
 
 def complete(text, state):
