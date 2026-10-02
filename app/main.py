@@ -6,12 +6,12 @@ import subprocess
 import readline
 import enum
 from dataclasses import dataclass
+import io
 
 
 BUILTINS = ["exit", "echo", "type", "pwd", "cd", "complete", "jobs"]
 DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 REGISTERED_COMPLETES = {}
-JOBS: list[Job] = []
 COMP_LINE = ""
 COMP_POINT = ""
 
@@ -26,40 +26,117 @@ class Job():
     command: str
     process : subprocess.Popen
 
+JOBS: list[Job] = []
+
+def print_jobs(stdout, only_done):
+    last = len(JOBS) - 1
+    for i, job in enumerate(JOBS):
+        if job.process.poll() is not None:
+            job.status = State.DONE
+        if only_done and job.status != State.DONE:
+            continue
+    indicator = "+" if i == last else "-" if i == last - 1 else " "
+    print(f"[{job[id]}]{indicator} {job.status.value:<24}{job.command}", file=stdout)
+JOBS[:] = [j for j in JOBS if j.status != State.DONE]
+
+def run_builtin(command: str, args: list[str], stdout, stderr):
+    if command == "echo":
+        print(" ".join(args), file=stdout)
+    elif command == "type":
+        if not args:
+            return
+        target = args[0]
+        if target in BUILTINS:
+            print(f"{target} is a shell builtin", file=stdout)
+        elif path := shutil.which(target):
+            print(f"{target} is {path}", file=stdout)
+        else:
+            print(f"{target}: not found", file=stderr)
+    elif command == "pwd":
+        print(os.getcwd(), file=stdout)
+    elif command == "cd":
+        target = os.path.expanduser(args[0]) if args else os.path.expanduser("~")
+        try:
+            os.chdir(target)
+        except OSError:
+            print(f"cd: {target}: No such file or directory", file=stderr)
+    elif command == "complete":
+        if not args:
+            return
+        if args[0] == "-C":
+            REGISTERED_COMPLETES[args[2]] = args[1]
+        elif args[0] == "-p":
+            if args[1] in REGISTERED_COMPLETES:
+                print(f"complete -C '{REGISTERED_COMPLETES[args[1]]}' {args[1]}", file=stdout)
+            else:
+                print(f"complete: {args[1]}: no completion specification", file=stderr)
+        elif args[0] == "-r":
+            REGISTERED_COMPLETES.pop(args[1], None)
+    elif command == "jobs":
+        print_jobs(stdout, only_done=False)
+
+def run_pipeline(segments: list[str]):
+    argvs = [parser(seg) for seg in segments]
+
+    for argv in argvs:
+        if argv[0] not in BUILTINS and not shutil.which(argv[0]):
+            print(f"{argv[0]}: command not found", file=sys.stderr)
+            return
+
+    procs: list[subprocess.Popen] = []
+    last_proc = None
+    prev_out = None
+
+    for i, argv in enumerate(argvs):
+        is_last = i == len(argvs) -1
+        command, *args = argv
+
+        if command in BUILTINS:
+            if prev_out:
+                prev_out.close()
+                prev_out = None
+            if is_last:
+                run_builtin(command, args, sys.stdout, sys.stderr)
+            else:
+                buf = io.StringIO()
+                run_builtin(command, args, buf, sys.stderr)
+                r, w = os.pipe()
+                os.write(w, buf.getvalue().encode())
+                os.close(w)
+                prev_out = os.fdopen(r)
+        else:
+            proc = subprocess.Popen(
+                argv, 
+                stdin=prev_out, 
+                stdout=None if is_last else subprocess.PIPE)
+            if prev_out:
+                prev_out.close()
+            prev_out = proc.stdout
+            procs.append(proc)
+            if is_last:
+                last_proc = proc
+
+    if last_proc:
+        last_proc.wait()
+
+    for proc in procs:
+        if proc.poll() is None:
+            proc.terminate()
+        proc.wait()
+
+
 def main():
     readline.set_completer(complete)
     readline.set_completer_delims(" \t")
     readline.parse_and_bind("tab: complete")
     while True:
         user_input = input("$ ")
-        command_split = pipe_split(user_input)
+        segments = pipe_split(user_input)
 
-        if len(command_split) > 1:
-            processes = []
-            first_command, last_command = command_split[0], command_split[-1]
-
-            tokens = parser(first_command)
-
-            if shutil.which(tokens[0]):
-                p1 = subprocess.Popen(tokens, stdout=subprocess.PIPE)
-                processes.append(p1.stdout)
-
-            if len(command_split) > 2:
-                middle_commands = command_split[1:-1]
-                for mid_command in middle_commands:
-                    tokens = parser(mid_command)
-                    if shutil.which(tokens[0]):
-                        p = subprocess.Popen(tokens, stdin=processes[-1], stdout=subprocess.PIPE)
-                        processes.append(p.stdout)
-
-            tokens = parser(last_command)
-            if shutil.which(tokens[0]):
-                p = subprocess.Popen(tokens, stdin=processes[-1], stdout=None)
-                processes.append(p.stdout)
-                p.wait()
-    
+        if len(segments) > 1:
+            run_pipeline(segments)
+            print_jobs(sys.stdout, True)
             continue
-
 
         command_text, redirect_target, stream, append = redirect(user_input)
         tokens = parser(command_text)
@@ -85,44 +162,8 @@ def main():
 
             if command == "exit":
                 break
-            elif command == "echo":
-                print(" ".join(args), file=stdout)
-            elif command == "type":
-                target = args[0]
-
-                if target in BUILTINS:
-                    print(f"{target} is a shell builtin", file=stdout)
-                elif path := shutil.which(target):
-                    print(f"{target} is {path}", file=stdout)
-                else:
-                    print(f"{target}: not found", file=stderr)
-
-            elif command == "pwd":
-                print(os.getcwd(), file=stdout)
-
-            elif command == "cd":
-                try:
-                    target = os.path.expanduser(args[0]) if args else os.path.expanduser("~")
-                    os.chdir(target)
-                except:
-                    print(f"cd: {target}: No such file or directory", file=stderr)
-            elif command == "complete":
-                if args[0] == "-C":
-                    REGISTERED_COMPLETES[args[2]] = args[1]
-                elif args[0] == "-p":
-                    if args[1] in REGISTERED_COMPLETES:
-                        print(f"complete -C '{REGISTERED_COMPLETES[args[1]]}' {args[1]}")
-                    else:
-                        print(f"complete: {args[1]}: no completion specification", file=stderr)
-                elif args[0] == "-r":
-                    del REGISTERED_COMPLETES[args[1]]
-            elif command == "jobs":
-                for job in JOBS:
-                    indicator =  "+" if job == JOBS[-1] else "-" if job == JOBS[-2] else " "
-                    if job.process.poll() is not None:
-                        job.status = State.DONE
-                    print(f"[{job.id}]{indicator} {job.status.value}{" " * (24 - len(job.status.value))}{job.command}")
-                JOBS[:] = [j for j in JOBS if j.status != State.DONE]
+            elif command in BUILTINS:
+                run_builtin(command, args, stdout, stderr)
             elif shutil.which(command):
                 if tokens[-1] == "&":
                     tokens = tokens[:-1]
@@ -136,13 +177,8 @@ def main():
             else:
                 print(f"{command}: command not found", file=stderr)
 
-            for job in JOBS:
-                indicator =  "+" if job == JOBS[-1] else "-" if job == JOBS[-2] else " "
-                if job.process.poll() is not None:
-                    job.status = State.DONE
-                    print(f"[{job.id}]{indicator} {job.status.value}{" " * (24 - len(job.status.value))}{job.command}")
-                    JOBS.remove(job)    
-
+        print_jobs(sys.stdout, True)
+            
 def redirect(input : str):
     for operator, stream, append in [
         (" > ", "stdout", False),
