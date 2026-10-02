@@ -232,6 +232,10 @@ def main():
         
         command, *args = tokens
 
+        for i, arg in enumerate(args):
+            if arg in DECLARED_VARIABLES:
+                args[i] = DECLARED_VARIABLES[arg]
+
         if redirect_target is not None:
             filename = parser(redirect_target)[0]
             directory = os.path.dirname(filename)
