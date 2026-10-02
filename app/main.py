@@ -329,7 +329,7 @@ def parser(arg : str):
             if wd:
                 result[i] = wd
                 
-    return [r for r in result if r]
+    return [r for r in result if r != ""]
 
 
 def expand(item: str) -> str:
