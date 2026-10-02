@@ -32,6 +32,32 @@ def main():
     readline.parse_and_bind("tab: complete")
     while True:
         user_input = input("$ ")
+        command_split = pipe_split(user_input)
+
+        if len(command_split) > 1:
+            processes = []
+            first_command, last_command = command_split[0], command_split[-1]
+            if len(command_split) > 2:
+                middle_commands = command_split[1:-1]
+
+            if shutil.which(first_command):
+                tokens = parser(first_command)
+                p1 = subprocess.Popen(tokens, stdout=subprocess.PIPE)
+                processes.append(p1)
+                
+            for mid_command in middle_commands:
+                if shutil.which(mid_command):
+                    tokens = parser(mid_command)
+                    p = subprocess.Popen(tokens, stdin=processes[-1], stdout=subprocess.PIPE)
+                    processes.append(p)
+
+            if shutil.which(last_command):
+                tokens = parser(last_command)
+                p = subprocess.Popen(tokens, stdin=processes[-1], stdout=None)
+                processes.append(p)
+            continue
+
+
         command_text, redirect_target, stream, append = redirect(user_input)
         tokens = parser(command_text)
 
@@ -112,8 +138,8 @@ def main():
                 if job.process.poll() is not None:
                     job.status = State.DONE
                     print(f"[{job.id}]{indicator} {job.status.value}{" " * (24 - len(job.status.value))}{job.command}")
-                    JOBS.remove(job)
-    
+                    JOBS.remove(job)    
+
 def redirect(input : str):
     for operator, stream, append in [
         (" > ", "stdout", False),
@@ -127,6 +153,9 @@ def redirect(input : str):
         if separator:
             return command, filename, stream, append
     return input, None, None, False
+
+def pipe_split(input: str): 
+    return input.split(" | ") if " | " in input else [input]
 
 def parser(arg : str):
     current_arg = ""
