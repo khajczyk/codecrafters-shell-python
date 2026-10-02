@@ -146,8 +146,8 @@ def main():
     readline.parse_and_bind("tab: complete")
     while True:
         user_input = input("$ ")
-        len = 1 if len(HISTORY) == 0 else len(HISTORY) + 1
-        HISTORY.append(len, user_input)
+        length = 1 if len(HISTORY) == 0 else len(HISTORY) + 1
+        HISTORY.append(length, user_input)
         segments = pipe_split(user_input)
 
         if len(segments) > 1:
