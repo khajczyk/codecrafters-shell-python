@@ -35,9 +35,9 @@ def print_jobs(stdout, only_done):
             job.status = State.DONE
         if only_done and job.status != State.DONE:
             continue
-    indicator = "+" if i == last else "-" if i == last - 1 else " "
-    print(f"[{job[id]}]{indicator} {job.status.value:<24}{job.command}", file=stdout)
-JOBS[:] = [j for j in JOBS if j.status != State.DONE]
+        indicator = "+" if i == last else "-" if i == last - 1 else " "
+        print(f"[{job[id]}]{indicator} {job.status.value:<24}{job.command}", file=stdout)
+    JOBS[:] = [j for j in JOBS if j.status != State.DONE]
 
 def run_builtin(command: str, args: list[str], stdout, stderr):
     if command == "echo":
