@@ -142,7 +142,7 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
             elif "=" in args[0]:
                 name, value = args[0].split("=")
                 if is_int(name[0]):
-                    print(f"declare: `{args[0]}`: not a valid identifier", file=stderr)
+                    print(f"declare: `{args[0]}': not a valid identifier", file=stderr)
                     return
                 DECLARED_VARIABLES[name] = value
 
