@@ -14,6 +14,7 @@ DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 REGISTERED_COMPLETES = {}
 COMP_LINE = ""
 COMP_POINT = ""
+HISTFILE = os.getenv('HISTFILE')
 
 class State(str, enum.Enum):
     RUNNING = "Running"
@@ -172,11 +173,17 @@ def run_pipeline(segments: list[str]):
         proc.wait()
 
 def load_history():
-    hist_file = os.getenv('HISTFILE')
-    if hist_file:
-        with open(hist_file, "r") as file:
+    if HISTFILE:
+        with open(HISTFILE, "r") as file:
             for line in file:
                 append_history(line.strip())
+        file.close()
+
+def write_history():
+    if HISTFILE:
+        with open(HISTFILE, "w") as file:
+            for record in HISTORY:
+                file.write(record.command + "\n")
         file.close()
 
 def main():
@@ -217,6 +224,7 @@ def main():
             stderr = file if stream == "stderr" else sys.stderr
 
             if command == "exit":
+                write_history()
                 break
             elif command in BUILTINS:
                 run_builtin(command, args, stdout, stderr)
