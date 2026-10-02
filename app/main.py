@@ -321,16 +321,18 @@ def parser(arg : str):
     if current_arg or argument_started:
         result.append(current_arg)
 
-    regex = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
     for i, item in enumerate(result):
         if "$" in item:
-            reg = regex.sub(item)
-            declared = DECLARED_VARIABLES.get(reg.group(1))
-            if declared:
-                result[i] = declared
+            result[i] = expand(item)
 
     
     return result
+
+def expand(item: str) -> str:
+    regex = re.compile(r"\$([A-Za-z_][A-Za-z0-9_]*)")
+    def lookup(match):
+        return DECLARED_VARIABLES.get(match.group(1), "")
+    return regex.sub(lookup, item)
 
 def complete(text, state):
     matches = []
