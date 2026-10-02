@@ -233,8 +233,7 @@ def main():
         command, *args = tokens
 
         for i, arg in enumerate(args):
-            print(arg[1:])
-            if arg[1:] in DECLARED_VARIABLES:
+            if arg[0] = "$" and arg[1:] in DECLARED_VARIABLES:
                 args[i] = DECLARED_VARIABLES[arg[1:]]
 
         if redirect_target is not None:
