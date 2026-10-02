@@ -47,6 +47,10 @@ def is_int(s: str) -> bool:
     except ValueError:
         return False
 
+def append_history(input):
+    length = 1 if len(HISTORY) == 0 else len(HISTORY) + 1
+    HISTORY.append((length, input))
+
 def run_builtin(command: str, args: list[str], stdout, stderr):
     if command == "echo":
         print(" ".join(args), file=stdout)
@@ -83,11 +87,16 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
     elif command == "jobs":
         print_jobs(stdout, only_done=False)
     elif command == "history":
-        limit = 0
-        if args and is_int(args[0]):
-            limit = int(args[0])        
-        for number, record in HISTORY[-limit:]:
-            print(f"{number} {record}", file=stdout)
+        if args and args[0] == "-r":
+            with open(args[1], "r") as file:
+                for line in file.readline():
+                    append_history(line)
+        else:
+            limit = 0
+            if args and is_int(args[0]):
+                limit = int(args[0])        
+            for number, record in HISTORY[-limit:]:
+                print(f"{number} {record}", file=stdout)
 
 
 def run_pipeline(segments: list[str]):
@@ -139,15 +148,13 @@ def run_pipeline(segments: list[str]):
             proc.terminate()
         proc.wait()
 
-
 def main():
     readline.set_completer(complete)
     readline.set_completer_delims(" \t")
     readline.parse_and_bind("tab: complete")
     while True:
         user_input = input("$ ")
-        length = 1 if len(HISTORY) == 0 else len(HISTORY) + 1
-        HISTORY.append((length, user_input))
+        append_history(input)
         segments = pipe_split(user_input)
 
         if len(segments) > 1:
