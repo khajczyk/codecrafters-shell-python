@@ -9,7 +9,7 @@ from dataclasses import dataclass
 import io
 
 
-BUILTINS = ["exit", "echo", "type", "pwd", "cd", "complete", "jobs"]
+BUILTINS = ["exit", "echo", "type", "pwd", "cd", "complete", "jobs", "history"]
 DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 REGISTERED_COMPLETES = {}
 COMP_LINE = ""
