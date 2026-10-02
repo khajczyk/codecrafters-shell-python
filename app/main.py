@@ -234,6 +234,7 @@ def main():
 
         for i, arg in enumerate(args):
             if arg[0] == "$" and arg[1:] in DECLARED_VARIABLES:
+                print(arg[1:])
                 args[i] = DECLARED_VARIABLES[arg[1:]]
 
         if redirect_target is not None:
