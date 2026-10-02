@@ -14,6 +14,7 @@ DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 REGISTERED_COMPLETES = {}
 COMP_LINE = ""
 COMP_POINT = ""
+HISTORY: list[str] = []
 
 class State(str, enum.Enum):
     RUNNING = "Running"
@@ -74,6 +75,10 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
             REGISTERED_COMPLETES.pop(args[1], None)
     elif command == "jobs":
         print_jobs(stdout, only_done=False)
+    elif command == "history":
+        for i, record in enumerate(HISTORY):
+            print(f"{i + 1} {record}")
+
 
 def run_pipeline(segments: list[str]):
     argvs = [parser(seg) for seg in segments]
@@ -178,6 +183,7 @@ def main():
                 print(f"{command}: command not found", file=stderr)
 
         print_jobs(sys.stdout, True)
+        HISTORY.append(user_input)
             
 def redirect(input : str):
     for operator, stream, append in [
