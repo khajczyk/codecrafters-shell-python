@@ -118,10 +118,9 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
                 file.close()
                 return
             elif is_int(args[0]):
-                limit = int(args[0])        
+                limit = int(args[0])    
         for record in HISTORY[-limit:]:
             print(f"{record.id} {record.command}", file=stdout)
-
 
 def run_pipeline(segments: list[str]):
     argvs = [parser(seg) for seg in segments]
@@ -172,10 +171,18 @@ def run_pipeline(segments: list[str]):
             proc.terminate()
         proc.wait()
 
+def load_history():
+    hist_file = os.getenv('HISTFILE')
+    with open(hist_file, "r") as file:
+        for line in file:
+            append_history(line.strip())
+    file.close()
+
 def main():
     readline.set_completer(complete)
     readline.set_completer_delims(" \t")
     readline.parse_and_bind("tab: complete")
+    load_history()
     while True:
         user_input = input("$ ")
         append_history(user_input)
