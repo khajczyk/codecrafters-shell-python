@@ -327,7 +327,7 @@ def parser(arg : str):
         if "$" in item:
             wd = expand(item)
             if wd:
-                result[i] = expand(item)
+                result[i] = wd
             else:
                 del result[i]
     return result
@@ -335,6 +335,7 @@ def parser(arg : str):
 def expand(item: str) -> str:
     def lookup(match):
         name = match[1] or match[2] or ""
+        print(f"match {match[1]} {match[2]}")
         return DECLARED_VARIABLES.get(name, "")
     return VAR_REGEX.sub(lookup, item)
 
