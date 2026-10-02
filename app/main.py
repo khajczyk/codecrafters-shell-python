@@ -14,7 +14,7 @@ DOUBLE_QUOTE_ESCAPES = {'$', '`', '"', '\\', '\n'}
 REGISTERED_COMPLETES = {}
 COMP_LINE = ""
 COMP_POINT = ""
-HISTORY: list[str] = []
+HISTORY: list[int, str] = []
 
 class State(str, enum.Enum):
     RUNNING = "Running"
@@ -83,12 +83,11 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
     elif command == "jobs":
         print_jobs(stdout, only_done=False)
     elif command == "history":
-        records = HISTORY
+        limit = 0
         if args and is_int(args[0]):
             limit = int(args[0])        
-            records = HISTORY[-limit:]
-        for i, record in enumerate(records):
-            print(f"{i + 1} {record}")
+        for record in HISTORY[-limit:]:
+            print(f"{record[0]} {record[1]}", file=stdout)
 
 
 def run_pipeline(segments: list[str]):
@@ -147,7 +146,8 @@ def main():
     readline.parse_and_bind("tab: complete")
     while True:
         user_input = input("$ ")
-        HISTORY.append(user_input)
+        len = 1 if len(HISTORY) == 0 else len(HISTORY) + 1
+        HISTORY.append(len, user_input)
         segments = pipe_split(user_input)
 
         if len(segments) > 1:
