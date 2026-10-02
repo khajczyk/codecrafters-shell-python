@@ -334,8 +334,7 @@ def parser(arg : str):
 
 def expand(item: str) -> str:
     def lookup(match):
-        name = match[1] or match[2] or ""
-        print(f"match {match[1]} {match[2]}")
+        name = match[1] or match[2]
         return DECLARED_VARIABLES.get(name, "")
     return VAR_REGEX.sub(lookup, item)
 
