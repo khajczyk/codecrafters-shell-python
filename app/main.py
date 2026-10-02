@@ -37,23 +37,23 @@ def main():
         if len(command_split) > 1:
             processes = []
             first_command, last_command = command_split[0], command_split[-1]
-            
 
-            if shutil.which(first_command):
-                tokens = parser(first_command)
+            tokens = parser(first_command)
+
+            if shutil.which(tokens[0]):
                 p1 = subprocess.Popen(tokens, stdout=subprocess.PIPE)
                 processes.append(p1.stdout)
 
             if len(command_split) > 2:
                 middle_commands = command_split[1:-1]
                 for mid_command in middle_commands:
-                    if shutil.which(mid_command):
-                        tokens = parser(mid_command)
+                    tokens = parser(mid_command)
+                    if shutil.which(tokens[0]):
                         p = subprocess.Popen(tokens, stdin=processes[-1], stdout=subprocess.PIPE)
                         processes.append(p.stdout)
 
-            if shutil.which(last_command):
-                tokens = parser(last_command)
+            tokens = parser(last_command)
+            if shutil.which(tokens[0]):
                 p = subprocess.Popen(tokens, stdin=processes[-1], stdout=None)
                 processes.append(p.stdout)
                 p.wait()
