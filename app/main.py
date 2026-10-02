@@ -89,7 +89,7 @@ def run_builtin(command: str, args: list[str], stdout, stderr):
     elif command == "history":
         if args and args[0] == "-r":
             with open(args[1], "r") as file:
-                for line in file.readline():
+                for line in file:
                     append_history(line)
         else:
             limit = 0
